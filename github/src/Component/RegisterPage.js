@@ -320,22 +320,24 @@
 // }
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
+//import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 
 //import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 //import Box from '@material-ui/core/Box';
+import { useSnackbar } from 'notistack';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 //const { setAlert } = alertContext;
 //import alertContext from '../Alert/alertContext';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Formik } from 'formik';
+// /import Snackbar from '@material-ui/core/Snackbar';
 //import { TextField, Grid } from '@material-ui/core';
 import Radio from '@material-ui/core/Radio';
  import RadioGroup from '@material-ui/core/RadioGroup';
@@ -343,7 +345,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const RegisterPage = () => {
-  const [values, setValues] = useState({firstName: "",lastName: '',email: '',phone: '',date: '',gender: '',password: '',confirm_password: ''});
+const [values, setValues] = useState({});
 
   // const onSubmit  =(e) => {
   //   e.preventDefault();
@@ -355,40 +357,40 @@ const RegisterPage = () => {
   //       console.log(error)
        
   //     })
-  //   }
+  //  }
   function Copyright() {
 
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+    return (
+      <Typography variant="body2" color="textSecondary" align="center">
+        {'Copyright © '}
+        <Link color="inherit" href="https://material-ui.com/">
+          Your Website
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  } 
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+      width: '100%', // Fix IE 11 issue.
+      marginTop: theme.spacing(3),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+  }));
 
 
 
@@ -399,29 +401,54 @@ const useStyles = makeStyles((theme) => ({
 //         .then(response => setUsers(response.data));
 
 // // empty dependency array means this effect will only run once (like componentDidMount in classes)
-// }, []);
-
-const handleSubmit = async (e) => {
-  // e.preventDefault();
-  console.log({e})
+// // }, []);
+  const { enqueueSnackbar } = useSnackbar();
+  
+  
+  const handleSubmit = (e) => {
+    // e.preventDefault();
+    console.log({ e })
 
 
           
 
-   const response = await axios.post('http://localhost:5000/api/users', {...e})
-    .then((response) => {
-      console.log("Welcome")
+    axios.post('http://localhost:5000/api/users', {...e})
+     .then((res) => {
+       console.log("response",res);
+     //  alert(res.data.msg)    
+    enqueueSnackbar('User Are Register');
+       
     })
-     .catch(errors =>
-       console.log(errors.response.data.msg)
-     )
+     .catch(error => {
+      enqueueSnackbar('Use Different Email Id');
+      console.log(error)
+    })
    // const responseJson = await response.json()
   // if (response.status != 200)
   // {
   //   console.log("User are Register" ,responseJson)
   //   }
 
-};
+  };
+ // const handleChange = e => setValues({ ...values, [e.target.name]: e.target.value });
+  
+// const [state, setState] = useState({
+//   open: false,
+//   vertical: 'top',
+//   horizontal: 'center',
+// });
+
+// const { vertical, horizontal, open } = state;
+
+// const handleClick = (newState) => () => {
+//   setState({ open: true, ...newState });
+// };
+// const handleClose = () => {
+//   setState({ ...state, open: false });
+//   };
+  
+
+ 
 //  const handleChange = e => setUsers({ ...users, [e.target.name]: e.target.value });
 //   const handleChange  = e => {
 //     setValues({ ...values, [e.target.name]: e.target.value });
@@ -444,39 +471,48 @@ const classes = useStyles();
         validate={(values) => {
 
           const errors = {};
+          // firstName
+          if (!values.firstName) {
+            errors.firstName = 'Please Enter First Name';
+          }
+          // Email
           if (!values.email) {
             errors.email = 'Please Enter EmailID';
-          } else if (!values.firstName) {
-            errors.firstName = 'Please Enter First Name';
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
+          } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
             errors.email = 'Please Enter EmailID Type( xyz@gmail.com))';
           }
-          else if (values.password !== values.confirm_password) {
+          // password
+          if (!values.password) {
+            errors.password = 'Please Enter password';
+          }
+          // confirm_password
+          if (!values.confirm_password) {
+            errors.confirm_password = 'Please Enter confirm password';
+          }
+          // password should match with confirm_password
+          if (values.password !== values.confirm_password) {
             errors.password ='Confirm Password And Password are Not same'
           }
+          // phone
           var pattern = new RegExp(/^[0-9\b]+$/);
-           if (!pattern.test(values.phone))
-           {
-              errors.phone = 'Please Enter Phone Number'
+          if (!pattern.test(values.phone)) {
+            errors.phone = 'Please Enter Phone Number'
           }
           else if(values.phone.length !== 10){
               errors.phone='Please enter valid phone number.'
           }
-           else if (!values.date) {
+          // 
+          if (!values.date) {
              errors.date = 'Please select Birthdate'
           }
-          else if (!values.lastName) {
+          // 
+          if (!values.lastName) {
             errors.lastName = 'Please Enter LastName'
           }
-           else if (!values.gender)
-           {
-             errors.gender ='Please Select Gender'
-             }
-         
-          
-          
+          // 
+          if (!values.gender) {
+            errors.gender ='Please Select Gender'
+          }
           return errors;
         }}
         // onSubmit={(values, { setSubmitting }) => {
@@ -503,7 +539,6 @@ const classes = useStyles();
             <TextField
               name='firstName'
               variant='outlined'
-              required
               fullWidth
               label='First Name'
               value={values.firstName}
@@ -518,7 +553,6 @@ const classes = useStyles();
             <TextField
               name='lastName'
               variant='outlined'
-              required
               fullWidth
               label='Last Name'
               value={values.lastName}
@@ -533,7 +567,7 @@ const classes = useStyles();
               id='date'
               label='Date'
               type='date'
-              defaultValue={values.date}
+          Value={values.date}
               onChange={handleChange}
               onBlur={handleBlur}
               // className={classes.textField}
@@ -560,7 +594,6 @@ const classes = useStyles();
               onBlur={handleBlur}
               value={values.email}
               variant='outlined'
-              required
               fullWidth
               label='Email Address'
             />
@@ -569,7 +602,6 @@ const classes = useStyles();
                           <Grid item xs={12}>
             <TextField
               variant='outlined'
-              required
               fullWidth
               label='Phone Number'
               name='phone'
@@ -584,7 +616,6 @@ const classes = useStyles();
             </Grid>
             <Grid item xs={12}> 
                   <TextField
-                  required
                   fullWidth
                   label='Password'
                     type='password'
@@ -597,7 +628,6 @@ const classes = useStyles();
                 </Grid>
                 <Grid item xs={12}> 
                   <TextField
-                  required
                   fullWidth
                   label='Confirm Password'
                     type='password'
@@ -612,8 +642,11 @@ const classes = useStyles();
           </Grid> 
           <Button  type="submit" fullWidth
                       variant="contained"
-                      color="primary" className={classes.submit} >Submit</Button>
-          </Grid>
+                  color="primary"
+                  className={classes.submit}>Submit</Button>
+           
+              </Grid>
+           
           </form>
       )}
     </Formik>
