@@ -14,7 +14,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 //import { Link } from 'react-router';
+import Dashboard from './Dashboard';
 
 function Copyright() {
   return (
@@ -49,15 +51,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginPage() {
+export default function LoginPage(props) {
   const classes = useStyles();
   // const token = sessionStorage.setItem('token', JSON.stringify(token));
   const api = 'http://localhost:5000/api/auth';
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ email: '', password: '' });
+  const history = useHistory();
   console.log('user', user);
   const { email, password } = user;
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
+  };
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      history.push('./Dashboard');
+    }
+  }, []);
+  const setToken = (key, value) => {
+    return Promise.resolve().then(() => {
+      console.log('setting token');
+      localStorage.setItem(key, value);
+      console.log('token set');
+    });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,16 +86,30 @@ export default function LoginPage() {
     axios
       .post(api, { ...user })
       .then((res) => {
+        //this are store the token
         const { token } = res.data;
+        //this are set Item in token
+        // setToken('token', token).then(() => {
         localStorage.setItem('token', token);
-        localStorage.getItem('token');
-
-        alert('User Login', res.data.user);
+        console.log('redirecting');
+        props.history.push('/dashboard');
+        // //window location are the used to redirect the particular page
+        // if (token) {
+        //   // window.location = '/Dashboard';
+        // } else {
+        //   history.push('/LoginPage');
+        //   // window.location = '/LoginPage';
+        // }
+        // alert('User Login', res.data.user);
+        //props.history.push('');
+        // });
       })
       .catch((err) => {
         alert('User Not EmailId-Password Not Correct ', err);
         console.log(err);
       });
+    // const header = `Authorization: Bearer ${token}`;
+    //axios.get('')
     //localStorage.getItem(token);
     //console.log('Token IS', token);
   };

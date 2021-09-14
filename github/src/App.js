@@ -1,8 +1,23 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import RegisterPage from './Component/RegisterPage';
 import LoginPage from './Component/LoginPage';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from 'react-router-dom';
 import Dashboard from './Component/Dashboard';
+
+const PrivateRoute = (props) => {
+  console.log('PRIVATE ROUTE: ', props.path);
+  return localStorage.getItem('token') ? (
+    <Route {...props} />
+  ) : (
+    <Redirect to='/login' />
+  );
+};
 
 // function getToken() {
 //   const tokenString = sessionStorage.getItem('token');
@@ -18,15 +33,35 @@ function App() {
     <Router>
       <div>
         <Switch>
-          <Route>
-            <Route path='/Register' component={RegisterPage} exact />
-            <Route path='/Dashboard' component={Dashboard} exact />
-            <Route path='/LoginPage' component={LoginPage} exact />{' '}
-          </Route>
+          <Route path='/login' component={LoginPage} exact />
+          <PrivateRoute path='/dashboard' component={Dashboard} exact />
+          <Route path='/register' component={RegisterPage} exact />
         </Switch>
       </div>
     </Router>
   );
 }
+
+// function PrivateRoute({ children, isAuthenticated, ...rest }) {
+//   return (
+//     <Route
+//       {...rest}
+//       render={
+//         ({ location }) => (
+//           isAuthenticated
+//             ? (
+//               children
+//             ) : (
+//               <Redirect
+//                 to={{
+//                   pathname: '/Dashboard',
+//                   state: { from: location }
+//                 }}
+//               />
+//             ))
+//       }
+//     />
+//   );
+// }
 
 export default App;

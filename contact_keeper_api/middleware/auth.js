@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-//const config = require('config');
+const config = require('config');
 //require('dotenv').config()
 
 module.exports = function(req, res, next) {
@@ -21,3 +21,4 @@ module.exports = function(req, res, next) {
 		res.status(401).json({ msg: 'Token is not valid' });
 	}
 };
+	

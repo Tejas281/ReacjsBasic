@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -17,7 +18,7 @@ router.post(
 			.not()
 			.isEmpty(),
 		check('email', 'Please include a valid email').isEmail(),
-		check(
+	check(
 			'password',
 			'Please enter a password with 6 or more characters'
 		).isLength({ min: 6 })
@@ -30,7 +31,7 @@ router.post(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { firstName,lastName, email,phone, date,gender,password,confirm_password } = req.body;
+		const {firstName,lastName,email,phone,date,gender,password,confirm_password } = req.body;
 
 		try {
 			let user = await User.findOne({ email });
