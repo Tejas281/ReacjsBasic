@@ -15,7 +15,7 @@ const PrivateRoute = (props) => {
   return localStorage.getItem('token') ? (
     <Route {...props} />
   ) : (
-    <Redirect to='/login' />
+    <Redirect to='/' />
   );
 };
 
@@ -33,8 +33,13 @@ function App() {
     <Router>
       <div>
         <Switch>
-          <Route path='/login' component={LoginPage} exact />
-          <PrivateRoute path='/dashboard' component={Dashboard} exact />
+          <Route path='/' component={LoginPage} exact />
+          <PrivateRoute
+            path='/dashboard'
+            // sensitive={false}
+            component={Dashboard}
+            exact
+          />
           <Route path='/register' component={RegisterPage} exact />
         </Switch>
       </div>

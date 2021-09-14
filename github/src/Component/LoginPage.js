@@ -64,7 +64,7 @@ export default function LoginPage(props) {
   };
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      history.push('./Dashboard');
+      history.push('/dashboard');
     }
   }, []);
   const setToken = (key, value) => {

@@ -404,7 +404,7 @@ const RegisterPage = () => {
   const history = useHistory();
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      history.push('./login');
+      history.push('/');
     }
   }, []);
 
