@@ -20,6 +20,7 @@ app.use(express.json({ extended: false }));
 app.use('/api/users', require('./routes/users'));
 // app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/auth'));
+//app.use('/api/auth/email', require('./routes/auth'));
 app.use('/api/contacts', require('./routes/contacts'));
 // app.use('/api/userslist', require('./routes/alluser'));
 const PORT = process.env.PORT || 5000;

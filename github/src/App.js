@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import RegisterPage from './Component/RegisterPage';
 import LoginPage from './Component/LoginPage';
+import Navbar from './Layout/Navbar';
 import {
   BrowserRouter as Router,
   Switch,
@@ -31,6 +32,7 @@ function App() {
   // }
   return (
     <Router>
+      <Navbar />
       <div>
         <Switch>
           <Route path='/' component={LoginPage} exact />
@@ -40,6 +42,7 @@ function App() {
             component={Dashboard}
             exact
           />
+
           <Route path='/register' component={RegisterPage} exact />
         </Switch>
       </div>

@@ -92,6 +92,7 @@ export default function LoginPage(props) {
         // setToken('token', token).then(() => {
         localStorage.setItem('token', token);
         console.log('redirecting');
+
         props.history.push('/dashboard');
         // //window location are the used to redirect the particular page
         // if (token) {

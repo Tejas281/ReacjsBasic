@@ -94,4 +94,29 @@ router.get('/', async (req, res, next) => {
     console.log('data not found', error);
   }
 });
+
+// router.get('/:id', async (req, res, next) => {
+//   var id = req.params.id;
+//   try {
+//     const result = await User.findById({ id: id });
+//     res.json(result);
+//   } catch (error) {
+//     console.log('data not found', error);
+//   }
+// });
+
+router.get('/:id', function (req, res, next) {
+  var id = req.params.id;
+  User.findById(id).exec(function (err, results) {
+    if (err) return console.error(err);
+    try {
+      res.json(results);
+      console.log(results);
+    } catch (error) {
+      console.log('errror getting results');
+      console.log(error);
+    }
+  });
+});
+
 module.exports = router;
