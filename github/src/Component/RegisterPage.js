@@ -411,24 +411,45 @@ const RegisterPage = () => {
   const handleSubmit = (e) => {
     // e.preventDefault();
     console.log({ e });
+    let formData = new FormData();
+    Object.keys(e).forEach((fieldName) => {
+      console.log(fieldName, e[fieldName]);
+      formData.append(fieldName, e[fieldName]);
+    });
+
+    // const formData = new FormData();
+    // formData.append('email', e.email);
+    // formData.append('firstName', e.firstName);
+    // formData.append('password', e.password);
+    // formData.append('lastName', e.lastName);
+    // formData.append('date', e.date);
+    // formData.append('gender', e.gender);
+    // formData.append('phone', e.phone);
+    // formData.append('confirm_password', e.confirm_password);
+    // formData.append('profilefile', e.profilefile);
+    // console.log({ formData });
 
     axios
-      .post('http://localhost:5000/api/users', { ...e })
+      .post('http://localhost:5000/api/users', formData)
       .then((res) => {
         console.log('response', res);
         //  alert(res.data.msg)
+        history.push('/');
         enqueueSnackbar('User Are Register');
       })
       .catch((error) => {
         enqueueSnackbar('Use Different Email Id');
         console.log(error);
       });
+
     // const responseJson = await response.json()
     // if (response.status != 200)
     // {
     //   console.log("User are Register" ,responseJson)
     //   }
+    return formData;
   };
+
   // const handleChange = e => setValues({ ...values, [e.target.name]: e.target.value });
 
   // const [state, setState] = useState({
@@ -450,7 +471,6 @@ const RegisterPage = () => {
   //   const handleChange  = e => {
   //     setValues({ ...values, [e.target.name]: e.target.value });
   // };
-
   const classes = useStyles();
 
   return (
@@ -471,6 +491,8 @@ const RegisterPage = () => {
             date: '',
             gender: '',
             confirm_password: '',
+            profilefile: '',
+            phone: '',
           }}
           validate={(values) => {
             const errors = {};
@@ -534,6 +556,7 @@ const RegisterPage = () => {
             handleChange,
             handleBlur,
             handleSubmit,
+            setFieldValue,
             /* and other goodies */
           }) => (
             <form onSubmit={handleSubmit} className={classes.form}>
@@ -541,6 +564,7 @@ const RegisterPage = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    id='firstName'
                     name='firstName'
                     variant='outlined'
                     fullWidth
@@ -552,6 +576,25 @@ const RegisterPage = () => {
                   />
 
                   {errors.firstName && touched.firstName && errors.firstName}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Button variant='contained' component='label'>
+                    Upload File
+                    <input
+                      id='file'
+                      name='profilefile'
+                      values={values.profilefile}
+                      type='file'
+                      hidden
+                      onChange={(event) => {
+                        setFieldValue(
+                          'profilefile',
+                          event.currentTarget.files[0]
+                        );
+                      }}
+                      className='form-control'
+                    />
+                  </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -571,7 +614,7 @@ const RegisterPage = () => {
                     id='date'
                     label='Date'
                     type='date'
-                    Value={values.date}
+                    value={values.date}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     // className={classes.textField}
@@ -629,7 +672,7 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  {errors.phone && errors.phone ? (
+                  {errors.phone && errors.phone && touched.phone ? (
                     <span style={{ color: 'red' }}>{errors.phone}</span>
                   ) : null}
                 </Grid>
@@ -671,6 +714,11 @@ const RegisterPage = () => {
                 >
                   Submit
                 </Button>
+                <Grid item>
+                  <Link href='/' variant='body2'>
+                    {'Do have an account ? Login'}
+                  </Link>
+                </Grid>
               </Grid>
             </form>
           )}

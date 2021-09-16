@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -11,8 +12,23 @@ const User = require('../models/User');
 // @route    POST api/users
 // @desc     Register user
 // @access   Public
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './routes/uploads');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
+router.use('/uploads', express.static('uploads'));
+
 router.post(
   '/',
+  upload.single('profilefile'),
+
   [
     check('firstName', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
@@ -38,6 +54,7 @@ router.post(
       gender,
       password,
       confirm_password,
+      profilefile,
     } = req.body;
 
     try {
@@ -56,6 +73,7 @@ router.post(
         gender,
         password,
         confirm_password,
+        profilefile,
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -79,6 +97,12 @@ router.post(
           res.json({ token });
         }
       );
+
+      console.log(JSON.stringify(req.file));
+      var response = JSON;
+      response += 'Files uploaded successfully.<br>';
+      response += `<img src="${req.file.path}" /><br>`;
+      return res.send(response);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');

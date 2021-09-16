@@ -3,9 +3,10 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router';
 import Logout from './Logout';
+import Navbar from '../Layout/Navbar';
 const Dashboard = () => {
   // const user = JSON.parse(localStorage.getItem('token'));
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);/
   // const token = user.token.id;
   // const {
   //   email,
@@ -33,14 +34,17 @@ const Dashboard = () => {
   //     });
   // }, []);
 
-  console.log(users);
+  // console.log(users);
   return (
-    <div>
-      <form>
-        <h1>Hello Dashboard </h1>
-        <Logout />
-      </form>
-    </div>
+    <>
+      <Navbar />
+      <div>
+        <form>
+          <h1>Hello Dashboard </h1>
+          <Logout />
+        </form>
+      </div>
+    </>
   );
 };
 

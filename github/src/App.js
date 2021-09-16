@@ -10,7 +10,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import Dashboard from './Component/Dashboard';
-
+import Profile from './Layout/Profile';
 const PrivateRoute = (props) => {
   console.log('PRIVATE ROUTE: ', props.path);
   return localStorage.getItem('token') ? (
@@ -32,7 +32,6 @@ function App() {
   // }
   return (
     <Router>
-      <Navbar />
       <div>
         <Switch>
           <Route path='/' component={LoginPage} exact />
@@ -40,16 +39,20 @@ function App() {
             path='/dashboard'
             // sensitive={false}
             component={Dashboard}
-            exact
+            // exact
           />
 
-          <Route path='/register' component={RegisterPage} exact />
+          <Route
+            path='/register'
+            component={RegisterPage}
+            // exact
+          />
         </Switch>
       </div>
     </Router>
   );
 }
-
+//  <Route path='/profile' component={Profile} exact />
 // function PrivateRoute({ children, isAuthenticated, ...rest }) {
 //   return (
 //     <Route
