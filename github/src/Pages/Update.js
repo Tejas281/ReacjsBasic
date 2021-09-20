@@ -1,4 +1,4 @@
-import react, { useEffect } from 'react';
+import react, {useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 //import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,8 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 //const { setAlert } = alertContext;
-//import alertContext from '../Alert/alertContext';
-import React, { useState } from 'react';
+//import alertContext from '../Alert/ale
 import axios from 'axios';
 import { Formik } from 'formik';
 // /import Snackbar from '@material-ui/core/Snackbar';
@@ -24,6 +23,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { useParams } from 'react-router';
 
 const Update = () => {
   const [values, setValues] = useState({});
@@ -80,17 +80,32 @@ const Update = () => {
 
   // // empty dependency array means this effect will only run once (like componentDidMount in classes)
   // // }, []);
+  const {id} =useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const [edits,setEdits] = useState([]);
 
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    date,
+    gender,
+    password,
+    confirm_password,
+  } = edits
+  
   const token = localStorage.getItem('token');
   const handleSubmit = (e) => {
     // e.preventDefault();
     console.log({ e });
-    let formData = new FormData();
-    Object.keys(e).forEach((fieldName) => {
-      console.log(fieldName, e[fieldName]);
-      formData.append(fieldName, e[fieldName]);
-    });
+   
+    
+    // let formData = new FormData();
+    // Object.keys(e).forEach((fieldName) => {
+    //   console.log(fieldName, e[fieldName]);
+    //   formData.append(fieldName, e[fieldName]);
+    // });
 
     // const formData = new FormData();
     // formData.append('email', e.email);
@@ -105,17 +120,16 @@ const Update = () => {
     // console.log({ formData });
 
     axios
-      .post(
-        'http://localhost:5000/api/contacts',
+      .put(
+        `http://localhost:5000/api/contacts/${id}`,
         {
           headers: { Authorization: `${token}` },
-        },
-        formData
-      )
+        }
+             )
       .then((res) => {
         console.log('response', res);
         //  alert(res.data.msg)
-
+       setEdits(res)
         enqueueSnackbar('User Are Register');
       })
       .catch((error) => {
@@ -128,7 +142,7 @@ const Update = () => {
     // {
     //   console.log("User are Register" ,responseJson)
     //   }
-    return formData;
+    // return formData;
   };
 
   // const handleChange = e => setValues({ ...values, [e.target.name]: e.target.value });

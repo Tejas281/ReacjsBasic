@@ -11,6 +11,7 @@ import {
 } from 'react-router-dom';
 import Dashboard from './Component/Dashboard';
 import Profile from './Layout/Profile';
+import Update from './Pages/Update';
 const PrivateRoute = (props) => {
   console.log('PRIVATE ROUTE: ', props.path);
   return localStorage.getItem('token') ? (
@@ -47,6 +48,13 @@ function App() {
             component={RegisterPage}
             // exact
           />
+          
+          <Route
+            path='/update'
+            component={Update}
+            // exact
+          />
+          
         </Switch>
       </div>
     </Router>

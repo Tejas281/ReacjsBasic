@@ -103,7 +103,7 @@ const Dashboard = () => {
                   <TableCell>
                     {' '}
                     <Button variant='contained' size='small' color='primary'>
-                      <Update />
+                   Update
                     </Button>
                   </TableCell>
                   <TableCell>

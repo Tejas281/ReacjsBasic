@@ -9,6 +9,7 @@ const { check, validationResult } = require('express-validator/check');
 
 const User = require('../models/User');
 const { response } = require('express');
+const Contact = require('../models/Contact');
 // mongodb+srv://tejas281:tejas281@cluster0.g8uoq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 // @route    POST api/users
 // @desc     Register user
@@ -114,6 +115,8 @@ router.post(
 
 // response.filename
 router.get('/', async (req, res, next) => {
+
+
   try {
     const result = await User.find();
     res.send(result);
@@ -146,4 +149,111 @@ router.get('/:id', function (req, res, next) {
   });
 });
 
+
+// @route    PUT api/contacts/:id
+// @desc     Update a contact
+// @access   Private
+router.put('/:id',async (req, res) => {
+	const errors = validationResult(req);
+
+  if (!errors.isEmpty())
+		return res.status(400).json({ errors: errors.array() });
+
+	const {  firstName,
+        lastName,
+        email,
+        phone,
+        date,
+        gender,
+        password,
+        confirm_password,
+        profilefile } = req.body;
+
+	// Build contact object
+	const contactFields = {};
+	if ( firstName) contactFields. firstName =  firstName;
+	if (lastName) contactFields.lastName = lastName;
+	if (email) contactFields.email = email;
+	if (phone) contactFields.phone = phone;
+	if (date) contactFields.date = date;
+	if (gender) contactFields.gender = gender;
+	if (password) contactFields.password = password;
+	if (confirm_password) contactFields.confirm_password = confirm_password;
+	if (profilefile) contactFields.profilefile = profilefile;
+ 
+  const  _id  = req.params.id;
+
+	try {
+ 
+		let users = await User.findOne({_id});
+		if (!users) return res.status(404).json({ msg: 'user not found' });
+
+		// Make sure user owns contact
+    //console.log(users)
+    
+		users = await User.findByIdAndUpdate(_id,
+			{ $set: contactFields },
+			{ new: true }
+   
+    );
+    res.json(users)
+		
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
+
+// router.put('/:id', function (req, res) {
+//   var id = req.params.id;
+//   const {   firstName,
+//     lastName,
+//     email,
+//     phone,
+//     date,
+//     gender,
+//     password,
+//     confirm_password,
+//     profilefile } = req.body;
+
+// // Build contact object
+// const contactFields = {};
+// if ( firstName) contactFields. firstName =  firstName;
+// if (lastName) contactFields.lastName = lastName;
+// if (email) contactFields.email = email;
+// if (phone) contactFields.phone = phone;
+// if (date) contactFields.date = date;
+// if (gender) contactFields.gender = gender;
+// if (password) contactFields.password = password;
+// if (confirm_password) contactFields.confirm_password = confirm_password;
+// if (profilefile) contactFields.profilefile = profilefile;
+// try{
+//  let user =  User.findById(id);
+//  if (!user) return res.status(404).json({ msg: 'Contact not found' });
+
+//  if (user.toString() !== req.user.id)
+//  return res.status(401).json({ msg: 'Not authorized' });
+
+// user =  User.findByIdAndUpdate(
+//  req.params.id,
+//  { $set:  contactFields},
+//  { new: true }
+// );
+// }
+// catch (err) {
+//   console.error(err.message);
+//   res.status(500).send('Server error');
+// }
+// //  .exec(function (err, results) {
+
+// //     if (err) return console.error(err);
+// //     try {
+// //       res.json(results);
+// //       console.log(results);
+// //     } catch (error) {
+// //       console.log('errror getting results');
+// //       console.log(error);
+// //     }
+// //   });
+// });
 module.exports = router;

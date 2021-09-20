@@ -74,14 +74,27 @@ router.put('/:id', auth, async (req, res) => {
 	if (!errors.isEmpty())
 		return res.status(400).json({ errors: errors.array() });
 
-	const { name, email, phone, type } = req.body;
+	const {   firstName,
+        lastName,
+        email,
+        phone,
+        date,
+        gender,
+        password,
+        confirm_password,
+        profilefile } = req.body;
 
 	// Build contact object
 	const contactFields = {};
-	if (name) contactFields.name = name;
+	if ( firstName) contactFields. firstName =  firstName;
+	if (lastName) contactFields.lastName = lastName;
 	if (email) contactFields.email = email;
 	if (phone) contactFields.phone = phone;
-	if (type) contactFields.type = type;
+	if (date) contactFields.date = date;
+	if (gender) contactFields.gender = gender;
+	if (password) contactFields.password = password;
+	if (confirm_password) contactFields.confirm_password = confirm_password;
+	if (profilefile) contactFields.profilefile = profilefile;
 
 	try {
 		let contact = await Contact.findById(req.params.id);

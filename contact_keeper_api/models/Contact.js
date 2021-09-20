@@ -6,35 +6,38 @@ const ContactSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'users'
 	},
-	firstName: {
+	profilefile: {
+		data: Buffer,
 		type: String,
-		required: true
-	},
-	lastName: {
+	  },
+	  firstName: {
 		type: String,
-		required: true
-	},
-	email: {
-		type: String
-	},
-	phone: {
-		type: String
-	},
-	date: {
+		required: true,
+	  },
+	  lastName: {
+		type: String,
+	  },
+	  email: {
+		type: String,
+	  },
+	  phone: {
+		type: String,
+	  },
+	  date: {
 		type: Date,
-		default: Date.now
-	},
-	gender:
-	{
+		default: Date.now,
+	  },
+	  gender: {
 		type: String,
-		required:true
-	},
-	password:
-	{
+	  },
+	  password: {
 		type: String,
-		required:true
-
-	}
+		required: true,
+	  },
+	  confirm_password: {
+		type: String,
+		required: true,
+	  }
 });
 
 module.exports = mongoose.model('contact', ContactSchema);
