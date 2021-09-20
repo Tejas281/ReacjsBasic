@@ -3,6 +3,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const app = express();
 const cors = require('cors');
+
 // const multer = require('multer');
 console.log('process.env', process.env.MONGOURI);
 // Connect Database
@@ -14,7 +15,7 @@ app.use(
 );
 // Init Middleware
 app.use(express.json({ extended: false }));
-
+app.use('/uploads', express.static('./routes/uploads'));
 // Define Routes
 app.use('/api/users', require('./routes/users'));
 // app.use('/api/users', require('./routes/users'));

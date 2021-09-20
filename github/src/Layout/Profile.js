@@ -16,11 +16,14 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import axios from 'axios';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
   },
+  btn: {},
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
@@ -53,10 +56,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard() {
+export default function Profile() {
   const classes = useStyles();
   const [users, setUsers] = useState({});
-  console.log('users', users);
   const [expanded, setExpanded] = React.useState(false);
   const token = localStorage.getItem('token');
 
@@ -67,7 +69,7 @@ export default function RecipeReviewCard() {
       })
       .then((res) => {
         //console.log(res.data.token);
-        // console.log(res.data);
+        console.log(res.data);
         setUsers(res.data);
       })
       .catch((err) => {
@@ -79,52 +81,56 @@ export default function RecipeReviewCard() {
   };
   return (
     <Card className={classes.root}>
-      {[users] &&
+      {
         // users.length > 0 &&
         [users].map((user) => (
           <>
-            <div className={classes.demo}>
-              <CardHeader
-                avatar={
-                  <Avatar
-                    aria-label='Profile'
-                    className={classes.avatar}
+            <div key={user._id}>
+              <div className={classes.demo}>
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      src={`http://localhost:5000/uploads/${user.profilefile}`}
+                      // src='https://www.gardendesign.com/pictures/images/675x529Max/site_3/helianthus-yellow-flower-pixabay_11863.jpg'
+                      aria-label='Profile'
+                      className={classes.avatar}
 
-                    //style={{ textAlign: 'center' }}
-                  >
-                    {user?.profilefile?.toString().slice(0, 1)}
-                  </Avatar>
-                }
-              />
+                      //style={{ textAlign: 'center' }}
+                    ></Avatar>
+                  }
+                />
+              </div>
+
+              <div className={classes.demos}>
+                {user.firstName} {user.lastName}
+              </div>
+              <CardContent>
+                <Typography
+                  className={classes.title}
+                  color='textSecondary'
+                  gutterBottom
+                >
+                  Mobile No :- {user.phone}
+                </Typography>
+                <Typography
+                  className={classes.pos}
+                  color='textSecondary'
+                  gutterBottom
+                >
+                  Gender :- {user.gender}
+                </Typography>
+                <Typography
+                  className={classes.pos}
+                  color='textSecondary'
+                  gutterBottom
+                >
+                  Email :- {user.email}
+                </Typography>
+              </CardContent>
             </div>
-            <div className={classes.demos}>
-              {user.firstName} {user.lastName}
-            </div>
-            <CardContent>
-              <Typography
-                className={classes.title}
-                color='textSecondary'
-                gutterBottom
-              >
-                Mobile No :- {user.phone}
-              </Typography>
-              <Typography
-                className={classes.pos}
-                color='textSecondary'
-                gutterBottom
-              >
-                Gender :- {user.gender}
-              </Typography>
-              <Typography
-                className={classes.pos}
-                color='textSecondary'
-                gutterBottom
-              >
-                Email :- {user.email}
-              </Typography>
-            </CardContent>
           </>
-        ))}
+        ))
+      }
     </Card>
   );
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -12,12 +13,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.use(express.static(__dirname + '/'));
-router.use('/uploads', express.static('uploads'));
+//router.use(express.static(__dirname + '/'));
+console.log('path', path.resolve(__dirname, '/uploads'));
+router.use('/uploads', express.static('/uploads'));
 
 router.post(
   '/profile-upload-single',
-  upload.single('profile-file'),
+  upload.single('profilefile'),
   function (req, res, next) {
     // req.file is the `profile-file` file
     // req.body will hold the text fields, if there were any

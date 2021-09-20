@@ -8,6 +8,7 @@ const config = require('config');
 const { check, validationResult } = require('express-validator/check');
 
 const User = require('../models/User');
+const { response } = require('express');
 // mongodb+srv://tejas281:tejas281@cluster0.g8uoq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 // @route    POST api/users
 // @desc     Register user
@@ -54,8 +55,8 @@ router.post(
       gender,
       password,
       confirm_password,
-      profilefile,
     } = req.body;
+    const profilefile = req.file.filename;
 
     try {
       let user = await User.findOne({ email });
@@ -85,6 +86,7 @@ router.post(
       const payload = {
         user: {
           id: user.id,
+          profilefile: req.file.filename,
         },
       };
 
@@ -98,7 +100,7 @@ router.post(
         }
       );
 
-      console.log(JSON.stringify(req.file));
+      console.log(JSON.stringify(req.file.filename));
       var response = JSON;
       response += 'Files uploaded successfully.<br>';
       response += `<img src="${req.file.path}" /><br>`;
@@ -110,6 +112,7 @@ router.post(
   }
 );
 
+// response.filename
 router.get('/', async (req, res, next) => {
   try {
     const result = await User.find();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
-
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 function getUser() {
   return localStorage.getItem('token');
 }
@@ -14,13 +14,11 @@ function Logout() {
   };
   return (
     <div>
-      <button
+      <ExitToAppIcon
         onClick={() => {
           logoutHandler();
         }}
-      >
-        Logout
-      </button>
+      ></ExitToAppIcon>
     </div>
   );
 }
