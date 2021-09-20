@@ -90,7 +90,7 @@ export default function Profile() {
                 <CardHeader
                   avatar={
                     <Avatar
-                      src={`http://localhost:5000/uploads/${user.profilefile}`}
+                      src={user.profilefile && `http://localhost:5000/uploads/${user.profilefile}`}
                       // src='https://www.gardendesign.com/pictures/images/675x529Max/site_3/helianthus-yellow-flower-pixabay_11863.jpg'
                       aria-label='Profile'
                       className={classes.avatar}
