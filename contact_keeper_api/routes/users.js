@@ -153,7 +153,7 @@ router.get('/:id', function (req, res, next) {
 // @route    PUT api/contacts/:id
 // @desc     Update a contact
 // @access   Private
-router.put('/:id',async (req, res) => {
+router.put('/:_id',async (req, res) => {
 	const errors = validationResult(req);
 
   if (!errors.isEmpty())
@@ -256,4 +256,26 @@ router.put('/:id',async (req, res) => {
 // //     }
 // //   });
 // });
+
+router.delete('/_:id',async (req, res) => {
+const  _id  = req.params.id;
+
+  try {
+		const users = await User.findOne({_id});
+
+		if (!users) return res.status(404).json({ msg: 'Contact not found' });
+
+		// Make sure user owns contact
+	
+		await users.findByIdAndRemove({_id});
+
+		res.json({ msg: 'Contact removed' });
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	
+	}
+});
+
+
 module.exports = router;

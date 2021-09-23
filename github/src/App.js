@@ -50,7 +50,7 @@ function App() {
           />
           
           <Route
-            path='/update/:id'
+            path="/update/:_id"
             component={Update}
             // exact
           />

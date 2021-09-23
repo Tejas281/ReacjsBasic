@@ -30,7 +30,9 @@ import Update from '../Pages/Update';
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
-
+  
+ const history =useHistory() 
+  
   const {
     email,
     password,
@@ -42,7 +44,18 @@ const Dashboard = () => {
     profilefile,
   } = users;
   const token = localStorage.getItem('token');
+    // const handleRouter =(e) =>{
+    //   axios.get(`http://localhost:5000/api/users/${id}`)
+    //   .then((res)=>{
+    //     console.log(res.data)
+    //   }).catch((error)=>
+    //   {
+    //     console.log("data is not found"")
 
+    //   })
+
+    // }
+    const { id } = useParams();
   useEffect(() => {
     axios
       .get('http://localhost:5000/api/users', {
@@ -50,13 +63,14 @@ const Dashboard = () => {
       })
       .then((res) => {
         //console.log(res.data.token);
-        // console.log(res.data);
+       console.log("id is",res.data);
         setUsers(res.data);
       })
       .catch((err) => {
         console.log('user Not Found', err);
       });
   }, []); // console.log(users);
+
 
   return (
     <>
@@ -85,7 +99,7 @@ const Dashboard = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {users && users?.map((user,i) => (
                 <TableRow
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
@@ -101,16 +115,30 @@ const Dashboard = () => {
                   <TableCell>{user.password}</TableCell>
                   <TableCell>{user.confirm_password}</TableCell>
                   <TableCell>
-                    {' '}
-                    <Button variant='contained' size='small' color='primary'>
-                   Update
-                    </Button>
+                  <div>
+                    <Link
+                        to={`/update/${user?._id}`}
+                        className="col-sm d-flex btn"
+                        key={i}
+                        underline="hover"
+                      >
+                        {'Update'}
+                           </Link>
+                  </div>
                   </TableCell>
                   <TableCell>
                     {' '}
-                    <Button variant='contained' size='small' color='secondary'>
-                      secondary
-                    </Button>
+                    <Link
+                        to={`/update/${user?._id}`}
+                        className="col-sm d-flex btn"
+                        style={{color:"red"
+                           
+                      }}
+                        key={i}
+                        underline="hover"
+                      >
+                        {'Delete'}
+                           </Link>
                   </TableCell>
                 </TableRow>
               ))}

@@ -54,10 +54,10 @@ const Update = (props) => {
     phone: '',
   });
 
-  const { id } = useParams();
+  const { _id } = useParams();
   useEffect(() => {
     console.log(props)
-    axios.get(`http://localhost:5000/api/users/${id}`)
+    axios.get(`http://localhost:5000/api/users/${_id}`)
       .then((res) => {
         setData({...res.data, password: res.data.confirm_password});
         setLoading(false);
@@ -74,12 +74,15 @@ const Update = (props) => {
 
     axios
       .put(
-        `http://localhost:5000/api/users/${id}`)
+        `http://localhost:5000/api/users/${_id}` ,{...e})
+        console.log("datatesting",data)
       .then((res) => {
-        console.log('response', res);
         //  alert(res.data.msg)
         // redirect to dashboard
         setData(res.data)
+      
+        console.log("data is",res.data)
+        // console.log("values>>",values)
         enqueueSnackbar('Update User');
       })
       .catch((error) => {
