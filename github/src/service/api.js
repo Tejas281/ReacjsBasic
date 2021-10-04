@@ -7,12 +7,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
   endpoints: (builder) => ({
     getusers: builder.query({
-      query: () => {
-        return {
-          url: "users",
-          method: "GET",
-        };
-      },
+      query: (email) =>(`users/${email}`)
     }),
   }),
 });

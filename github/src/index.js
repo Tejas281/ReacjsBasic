@@ -1,11 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { SnackbarProvider, useSnackbar } from "notistack";
+import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import userAuthApp from "./store";
-const store = createStore(userAuthApp);
+import store from "./store";
 
 ReactDOM.render(
   <React.StrictMode>
