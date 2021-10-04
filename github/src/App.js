@@ -1,17 +1,17 @@
-import React, { Component, useState } from 'react';
+import React from 'react';
 import RegisterPage from './Component/RegisterPage';
 import LoginPage from './Component/LoginPage';
-import Navbar from './Layout/Navbar';
+// import Navbar from './Layout/Navbar';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
 } from 'react-router-dom';
 import Dashboard from './Component/Dashboard';
-import Profile from './Layout/Profile';
+// import Profile from './Layout/Profile';
 import Update from './Pages/Update';
+import {useDispatch, useSelector } from 'react-redux'
 const PrivateRoute = (props) => {
   console.log('PRIVATE ROUTE: ', props.path);
   return localStorage.getItem('token') ? (
@@ -27,6 +27,8 @@ const PrivateRoute = (props) => {
 //   return userToken?.token;
 // }
 function App() {
+  const userAuth = useSelector(state => state.authUser);
+  const dispatch = useDispatch();
   // const { token, setToken } = useToken();
   // if (!token) {
   //   return <LoginPage setToken={setToken} />;
@@ -34,6 +36,8 @@ function App() {
   return (
     <Router>
       <div>
+   
+
         <Switch>
           <Route path='/' component={LoginPage} exact />
           <PrivateRoute
@@ -56,6 +60,9 @@ function App() {
           />
           
         </Switch>
+
+
+
       </div>
     </Router>
   );

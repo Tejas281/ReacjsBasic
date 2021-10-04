@@ -18,7 +18,7 @@ app.use(express.json({ extended: false }));
 app.use('/uploads', express.static('./routes/uploads'));
 // Define Routes
 app.use('/api/users', require('./routes/users'));
-app.use('/api/users/:_id', require('./routes/users'));
+app.use('/api/users/delete/:_id', require('./routes/users'));
 
 app.use('/api/users/:id', require('./routes/users'));
 // app.use('/api/users', require('./routes/users'));

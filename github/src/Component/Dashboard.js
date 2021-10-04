@@ -1,76 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
-import { useParams } from 'react-router';
-import Logout from './Logout';
-import Navbar from '../Layout/Navbar';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@material-ui/core/Button';
-import { ClassNames } from '@emotion/react';
-import Update from '../Pages/Update';
-
-// function createData(name, calories, fat, carbs, protein) {
-//   return { name, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import Navbar from "../Layout/Navbar";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Button from "@material-ui/core/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from '../store/users';
 
 const Dashboard = () => {
-  const [users, setUsers] = useState([]);
-  
- const history =useHistory() 
-  
-  const {
-    email,
-    password,
-    firstName,
-    lastName,
-    date,
-    gender,
-    confirm_password,
-    profilefile,
-  } = users;
-  const token = localStorage.getItem('token');
-    // const handleRouter =(e) =>{
-    //   axios.get(`http://localhost:5000/api/users/${id}`)
-    //   .then((res)=>{
-    //     console.log(res.data)
-    //   }).catch((error)=>
-    //   {
-    //     console.log("data is not found"")
+  const dispatch = useDispatch();
+  const [auth, users] = useSelector((state) => [state.auth.user, state.users.users]);
+  const token = localStorage.getItem("token");
 
-    //   })
-
-    // }
-    const { id } = useParams();
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/users', {
+      .get("http://localhost:5000/api/users", {
         headers: { Authorization: `${token}` },
       })
       .then((res) => {
-        //console.log(res.data.token);
-       console.log("id is",res.data);
-        setUsers(res.data);
+        dispatch(setUsers(res.data));
       })
       .catch((err) => {
-        console.log('user Not Found', err);
+        console.log("user Not Found", err);
       });
-  }, []); // console.log(users);
+  }, []); 
+  const handleSubmit = (userId) => {
+    axios
+      .delete(`http://localhost:5000/api/users/delete/${userId}`)
+      .then((res) => {
+        console.log("Data Remove", res.data);
+        dispatch(setUsers(users.filter((single) => single._id !== userId)));
+      })
+      .catch((err) => {
+        console.log("user Not Found", err);
+      });
+  };
 
+  console.log({ auth });
 
   return (
     <>
@@ -79,9 +51,9 @@ const Dashboard = () => {
         <TableContainer component={Paper}>
           <Table
             sx={{ minWidth: 650 }}
-            size='small'
+            size="small"
             stickyHeader
-            aria-label='sticky table'
+            aria-label="sticky table"
           >
             <TableHead>
               <TableRow>
@@ -93,55 +65,53 @@ const Dashboard = () => {
                 <TableCell>Gender</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Password</TableCell>
-                <TableCell>Confirm Password</TableCell>
                 <TableCell>Update</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users && users?.map((user,i) => (
-                <TableRow
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component='th' scope='row'>
-                    {user.firstName}
-                  </TableCell>
-                  <TableCell>{user.profilefile}</TableCell>
-                  <TableCell>{user.lastName}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.gender}</TableCell>
-                  <TableCell>{user.date}</TableCell>
-                  <TableCell>{user.password}</TableCell>
-                  <TableCell>{user.confirm_password}</TableCell>
-                  <TableCell>
-                  <div>
-                    <Link
-                        to={`/update/${user?._id}`}
-                        className="col-sm d-flex btn"
-                        key={i}
-                        underline="hover"
-                      >
-                        {'Update'}
-                           </Link>
-                  </div>
-                  </TableCell>
-                  <TableCell>
-                    {' '}
-                    <Link
-                        to={`/update/${user?._id}`}
-                        className="col-sm d-flex btn"
-                        style={{color:"red"
-                           
-                      }}
-                        key={i}
-                        underline="hover"
-                      >
-                        {'Delete'}
-                           </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {users &&
+                users?.map((user, i) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    key={i}
+                  >
+                    <TableCell component="th" scope="row">
+                      {user.firstName}
+                    </TableCell>
+                    <TableCell>{user.profilefile}</TableCell>
+                    <TableCell>{user.lastName}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.phone}</TableCell>
+                    <TableCell>{user.gender}</TableCell>
+                    <TableCell>{user.date}</TableCell>
+                    <TableCell>{user.password}</TableCell>
+                    <TableCell>
+                      <div>
+                        <Link
+                          to={`/update/${user?._id}`}
+                          className="col-sm d-flex btn"
+                          key={i}
+                          underline="hover"
+                        >
+                          {"Update"}
+                        </Link>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {" "}
+                      {auth?._id !== user?._id && (
+                        <Button
+                          variant="contained"
+                          onClick={() => handleSubmit(user._id)}
+                          disabled={users?.token}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -151,63 +121,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-// //
-// // useEffect(() => {
-// //   axios.get('http://localhost:5000/api/auth/:id').then((res) => {});
-// // });
-
-// // const [users, setUsers] = useState([]);
-// // useEffect(() => {
-// //   if (localStorage.getItem('token')) {
-// //     const fetchProduct = async () => {
-// //       const { data } = await axios.get('http://localhost:5000/api/auth/:id');
-// //       setUsers(data);
-// //     };
-// //     fetchProduct();
-// //   } else {
-// //     console.log('token is not fetch');
-// //   }
-// // // }, []);
-// // const setToken = (key, value) => {
-// //   return Promise.resolve().then(() => {
-// //     console.log('setting token');
-// //     localStorage.setItem(key, value);
-// //     console.log('token set');
-// //   });
-// // };
-// // const [users, setUsers] = useState({ email: '', password: '' });
-
-// // //const token = sessionStorage.setItem('token', JSON.stringify(token));
-// // const api = 'http://localhost:5000/api/auth';
-// // //  const [users, setUsers] = useState([]);
-// // const token = JSON.parse(localStorage.getItem('data'));
-// //token = users.data.id;
-// //const history = useHistory();
-// // //  console.log('user', users);
-
-// //
-// const [users, setUsers] = useState();
-// //const [tokens, setTokens] = useState();
-// // const user = JSON.parse(sessionStorage.getItem('data'));
-// // const token = user.data.id;
-// //const { email, password } = users;
-
-// const { id } = useParams;
-// // const { ids } = users;
-// const token = localStorage.getItem('token');
-
-// useEffect(() => {
-//   axios
-//     .get('http://localhost:5000/api/auth', {
-//       headers: { Authorization: `Bearer ${token}` },
-//     })
-//     .then((res) => {
-//       console.log('id is found', token);
-//       console.log('user found', res.data);
-//     })
-//     .catch((err) => {
-//       console.log('users not found', err);
-//     });
-// }, []);
-
-//axios.get(`http://localhost:5000/api/users/${id}`);

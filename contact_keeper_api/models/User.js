@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
+ 
   profilefile: {
     data: Buffer,
     type: String,

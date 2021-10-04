@@ -155,7 +155,7 @@ router.get('/:id', function (req, res, next) {
 // @access   Private
 router.put('/:_id',async (req, res) => {
 	const errors = validationResult(req);
-
+  
   if (!errors.isEmpty())
 		return res.status(400).json({ errors: errors.array() });
 
@@ -181,17 +181,17 @@ router.put('/:_id',async (req, res) => {
 	if (confirm_password) contactFields.confirm_password = confirm_password;
 	if (profilefile) contactFields.profilefile = profilefile;
  
-  const  _id  = req.params.id;
-
+  const  _id  = req.params._id;
+  console.log("id is",req.params)
 	try {
  
-		let users = await User.findOne({_id});
+		const users = await User.findOne({_id});
 		if (!users) return res.status(404).json({ msg: 'user not found' });
 
 		// Make sure user owns contact
     //console.log(users)
     
-		users = await User.findByIdAndUpdate(_id,
+		 await User.findByIdAndUpdate(_id,
 			{ $set: contactFields },
 			{ new: true }
    
@@ -257,19 +257,19 @@ router.put('/:_id',async (req, res) => {
 // //   });
 // });
 
-router.delete('/_:id',async (req, res) => {
-const  _id  = req.params.id;
-
+router.delete('/delete/:_id',async (req, res) => {
+const   _id   = req.params._id;
+console.log("id is",req.params)
   try {
 		const users = await User.findOne({_id});
-
-		if (!users) return res.status(404).json({ msg: 'Contact not found' });
+    console.log("data",users)
+		if (!users) return res.status(404).json({ msg: 'User not found' });
 
 		// Make sure user owns contact
 	
-		await users.findByIdAndRemove({_id});
+    await User.findByIdAndRemove(_id);
 
-		res.json({ msg: 'Contact removed' });
+		res.json({ msg: 'users removed' });
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');

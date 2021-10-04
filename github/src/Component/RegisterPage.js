@@ -321,13 +321,9 @@
 import react, { useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-//import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-
-//import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-//import Box from '@material-ui/core/Box';
 import { useSnackbar } from 'notistack';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -345,8 +341,12 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useHistory } from 'react-router-dom';
+import InputPassword from './InputPassword';
 const RegisterPage = () => {
-  const [values, setValues] = useState({});
+  const [passwordvalues, setPasswrodValues] = useState({
+    password:'',
+    showPassword:false
+  });
 
   // const onSubmit  =(e) => {
   //   e.preventDefault();
@@ -392,14 +392,6 @@ const RegisterPage = () => {
     },
   }));
 
-  //   useEffect(() => {
-  //     // POST request using axios inside useEffect React hook
-  //     const reg = { users };
-  //     axios.post('http://localhost:5000/api/users', reg)
-  //         .then(response => setUsers(response.data));
-
-  // // empty dependency array means this effect will only run once (like componentDidMount in classes)
-  // // }, []);
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   useEffect(() => {
@@ -408,6 +400,12 @@ const RegisterPage = () => {
     }
   }, []);
 
+  const handleClickShowPassword =()=>{
+    setPasswrodValues({...passwordvalues,showPassword :!passwordvalues.showPassword});
+  }
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const handleSubmit = (e) => {
     // e.preventDefault();
     console.log({ e });
@@ -470,6 +468,11 @@ const RegisterPage = () => {
   //  const handleChange = e => setUsers({ ...users, [e.target.name]: e.target.value });
   //   const handleChange  = e => {
   //     setValues({ ...values, [e.target.name]: e.target.value });
+  // };
+
+
+  // const handlePasswordChange = (prop) => (event) => {
+  //   setValues({ ...values, [prop]: event.target.value });
   // };
   const classes = useStyles();
 
@@ -677,15 +680,12 @@ const RegisterPage = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label='Password'
-                    type='password'
-                    variant='outlined'
-                    name='password'
+                  <InputPassword
+                    id="password"
+                    name="password"
+                    value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.password}
                   />
                   {errors.password && touched.password && errors.password}
                 </Grid>

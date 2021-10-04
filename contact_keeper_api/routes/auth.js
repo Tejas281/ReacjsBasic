@@ -14,8 +14,10 @@ const User = require('../models/User');
 
 router.get('/', auth, async (req, res, next) => {
   try {
+
     const result = await User.findById(req.user.id);
     res.json(result);
+    
     console.log(result);
   } catch (error) {
     console.log('data not found', error);

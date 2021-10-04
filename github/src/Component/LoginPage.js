@@ -15,7 +15,9 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import InputPassword from './InputPassword';
 //import { Link } from 'react-router';
+
 import Dashboard from './Dashboard';
 
 function Copyright() {
@@ -59,6 +61,12 @@ export default function LoginPage(props) {
   const history = useHistory();
   console.log('user', user);
   const { email, password } = user;
+
+  
+  console.log("update");
+
+  
+
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
@@ -90,9 +98,10 @@ export default function LoginPage(props) {
         const { token } = res.data;
         //this are set Item in token
         // setToken('token', token).then(() => {
+
         localStorage.setItem('token', token);
         console.log('redirecting');
-
+          console.log("token data is",res.data);
         props.history.push('/dashboard');
         // //window location are the used to redirect the particular page
         // if (token) {
@@ -139,18 +148,11 @@ export default function LoginPage(props) {
             autoComplete='email'
             autoFocus
           />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
+          <InputPassword 
+            id="password"
+            name="password"
             value={password}
             onChange={handleChange}
-            label='Password'
-            type='password'
-            id='password'
-            autoComplete='current-password'
           />
           <FormControlLabel
             control={<Checkbox value='remember' color='primary' />}

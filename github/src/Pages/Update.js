@@ -17,7 +17,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useParams } from 'react-router';
 import React from 'react';
-import { PanoramaSharp } from '@material-ui/icons';
+import InputPassword from '../Component/InputPassword'
+// import { PanoramaSharp } from '@material-ui/icons';
 
 const Update = (props) => {
 
@@ -288,15 +289,12 @@ const Update = (props) => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label='Password'
-                    type='password'
-                    variant='outlined'
-                    name='password'
+                <InputPassword
+                    id="password"
+                    name="password"
+                    value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.password}
                   />
                   {errors.password && touched.password && errors.password}
                 </Grid>
