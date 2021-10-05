@@ -1,164 +1,158 @@
-import react, { useState, useEffect } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import { useSnackbar } from 'notistack';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import axios from 'axios';
-import { Formik } from 'formik';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { useParams } from 'react-router';
-import React from 'react';
-import InputPassword from '../Component/InputPassword'
-// import { PanoramaSharp } from '@material-ui/icons';
+import  {makeStyles } from "@material-ui/core/styles";
+import {Avatar,Button,TextField,Link,Grid,Typography,Container,Radio,RadioGroup,FormLabel,FormControlLabel} from "@material-ui/core";
+import { useSnackbar } from "notistack";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import React, { useState,useEffect } from "react";
+import axios from "axios";
+import { Formik } from "formik";
+import { useHistory } from "react-router-dom";
+import InputPassword from "./InputPassword";
+const RegisterPage = () => {
+  const [passwordvalues, setPasswrodValues] = useState({
+    password: "",
+    showPassword: false,
+  });
 
-const Update = (props) => {
+  function Copyright() {
+    return (
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <Link color="inherit" href="https://material-ui.com/">
+          Your Website
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
+    );
+  }
 
   const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
     },
     avatar: {
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      width: '100%', // Fix IE 11 issue.
+      width: "100%", // Fix IE 11 issue.
       marginTop: theme.spacing(3),
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
   }));
+
   const { enqueueSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    date: '',
-    gender: '',
-    confirm_password: '',
-    profilefile: '',
-    phone: '',
-  });
-
-  const { _id } = useParams();
+  const history = useHistory();
   useEffect(() => {
-    console.log(props)
-    axios.get(`http://localhost:5000/api/users/${_id}`)
-      .then((res) => {
-        setData({...res.data, password: res.data.confirm_password});
-        setLoading(false);
-      }).catch((error) => {
-        console.log("data is not found", error)
-      })
+    if (localStorage.getItem("token")) {
+      history.push("/");
+    }
   }, []);
-  console.log(data)
-  const token = localStorage.getItem('token');
+
+  const handleClickShowPassword = () => {
+    setPasswrodValues({
+      ...passwordvalues,
+      showPassword: !passwordvalues.showPassword,
+    });
+  };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const handleSubmit = (e) => {
-    // e.preventDefault();
     console.log({ e });
-
-
+    let formData = new FormData();
+    Object.keys(e).forEach((fieldName) => {
+      console.log(fieldName, e[fieldName]);
+      formData.append(fieldName, e[fieldName]);
+    });
     axios
-      .put(
-        `http://localhost:5000/api/users/${_id}` ,{...e})
-        console.log("datatesting",data)
+      .post("http://localhost:5000/api/users", formData)
       .then((res) => {
-        //  alert(res.data.msg)
-        // redirect to dashboard
-        setData(res.data)
-      
-        console.log("data is",res.data)
-        // console.log("values>>",values)
-        enqueueSnackbar('Update User');
+        console.log("response", res);
+        history.push("/");
+        enqueueSnackbar("User Are Register");
       })
       .catch((error) => {
-        enqueueSnackbar('Some Error');
+        enqueueSnackbar("Use Different Email Id");
         console.log(error);
       });
-
+    return formData;
   };
-
   const classes = useStyles();
 
   return (
-    <Container component='main' maxWidth='xs'>
+    <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component='h1' variant='h5'>
-          Profile Change
+        <Typography component="h1" variant="h5">
+          Sign up
         </Typography>
-        {!loading && <Formik
-          initialValues={{ ...data }}
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+            firstName: "",
+            lastName: "",
+            date: "",
+            gender: "",
+            confirm_password: "",
+            profilefile: "",
+            phone: "",
+          }}
           validate={(values) => {
             const errors = {};
             // firstName
             if (!values.firstName) {
-              errors.firstName = 'Please Enter First Name';
+              errors.firstName = "Please Enter First Name";
             }
             // Email
             if (!values.email) {
-              errors.email = 'Please Enter EmailID';
+              errors.email = "Please Enter EmailID";
             } else if (
               !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
             ) {
-              errors.email = 'Please Enter EmailID Type( xyz@gmail.com))';
+              errors.email = "Please Enter EmailID Type( xyz@gmail.com))";
             }
             // password
             if (!values.password) {
-              errors.password = 'Please Enter password';
+              errors.password = "Please Enter password";
             }
             // confirm_password
             if (!values.confirm_password) {
-              errors.confirm_password = 'Please Enter confirm password';
+              errors.confirm_password = "Please Enter confirm password";
             }
             // password should match with confirm_password
             if (values.password !== values.confirm_password) {
-              errors.password = 'Confirm Password And Password are Not same';
+              errors.password = "Confirm Password And Password are Not same";
             }
             // phone
             var pattern = new RegExp(/^[0-9\b]+$/);
             if (!pattern.test(values.phone)) {
-              errors.phone = 'Please Enter Phone Number';
+              errors.phone = "Please Enter Phone Number";
             } else if (values.phone.length !== 10) {
-              errors.phone = 'Please enter valid phone number.';
+              errors.phone = "Please enter valid phone number.";
             }
             //
             if (!values.date) {
-              errors.date = 'Please select Birthdate';
+              errors.date = "Please select Birthdate";
             }
             //
             if (!values.lastName) {
-              errors.lastName = 'Please Enter LastName';
+              errors.lastName = "Please Enter LastName";
             }
             //
             if (!values.gender) {
-              errors.gender = 'Please Select Gender';
+              errors.gender = "Please Select Gender";
             }
             return errors;
           }}
-          // onSubmit={(values, { setSubmitting }) => {
-          //   setTimeout(() => {
-          //     alert(JSON.stringify(values, null, 2));
-          //     setSubmitting(false);
-          //   }, 400);
-          // }}
           onSubmit={handleSubmit}
         >
           {({
@@ -169,18 +163,17 @@ const Update = (props) => {
             handleBlur,
             handleSubmit,
             setFieldValue,
-            /* and other goodies */
           }) => (
             <form onSubmit={handleSubmit} className={classes.form}>
-              {console.log('values', values)}
+              {console.log("values", values)}
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    id='firstName'
-                    name='firstName'
-                    variant='outlined'
+                    id="firstName"
+                    name="firstName"
+                    variant="outlined"
                     fullWidth
-                    label='First Name'
+                    label="First Name"
                     value={values.firstName}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -190,30 +183,30 @@ const Update = (props) => {
                   {errors.firstName && touched.firstName && errors.firstName}
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Button variant='contained' component='label'>
+                  <Button variant="contained" component="label">
                     Upload File
                     <input
-                      id='file'
-                      name='profilefile'
+                      id="file"
+                      name="profilefile"
                       values={values.profilefile}
-                      type='file'
+                      type="file"
                       hidden
                       onChange={(event) => {
                         setFieldValue(
-                          'profilefile',
+                          "profilefile",
                           event.currentTarget.files[0]
                         );
                       }}
-                      className='form-control'
+                      className="form-control"
                     />
                   </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    name='lastName'
-                    variant='outlined'
+                    name="lastName"
+                    variant="outlined"
                     fullWidth
-                    label='Last Name'
+                    label="Last Name"
                     value={values.lastName}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -223,73 +216,72 @@ const Update = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    id='date'
-                    label='Date'
-                    type='date'
+                    id="date"
+                    label="Date"
+                    type="date"
                     value={values.date}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    // className={classes.textField}
                     InputLabelProps={{
                       shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <FormLabel component='legend'>Gender</FormLabel>
+                  <FormLabel component="legend">Gender</FormLabel>
                   <RadioGroup
-                    aria-label='gender'
-                    name='gender'
+                    aria-label="gender"
+                    name="gender"
                     value={values.gender}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   >
                     <FormControlLabel
-                      value='female'
+                      value="female"
                       control={<Radio />}
-                      label='Female'
+                      label="Female"
                     />
                     <FormControlLabel
-                      value='male'
+                      value="male"
                       control={<Radio />}
-                      label='Male'
+                      label="Male"
                     />
                   </RadioGroup>
                   {touched.gender && errors.gender ? (
-                    <span style={{ color: 'red' }}>{errors.gender}</span>
+                    <span style={{ color: "red" }}>{errors.gender}</span>
                   ) : null}
                 </Grid>
 
                 <Grid item xs={12}>
                   <TextField
-                    type='email'
-                    name='email'
+                    type="email"
+                    name="email"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.email}
-                    variant='outlined'
+                    variant="outlined"
                     fullWidth
-                    label='Email Address'
+                    label="Email Address"
                   />
                   {errors.email && touched.email && errors.email}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     fullWidth
-                    label='Phone Number'
-                    name='phone'
+                    label="Phone Number"
+                    name="phone"
                     value={values.phone}
-                    autoComplete='Phone'
+                    autoComplete="Phone"
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
                   {errors.phone && errors.phone && touched.phone ? (
-                    <span style={{ color: 'red' }}>{errors.phone}</span>
+                    <span style={{ color: "red" }}>{errors.phone}</span>
                   ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                <InputPassword
+                  <InputPassword
                     id="password"
                     name="password"
                     value={values.password}
@@ -301,10 +293,10 @@ const Update = (props) => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Confirm Password'
-                    type='password'
-                    variant='outlined'
-                    name='confirm_password'
+                    label="Confirm Password"
+                    type="password"
+                    variant="outlined"
+                    name="confirm_password"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.confirm_password}
@@ -315,26 +307,26 @@ const Update = (props) => {
                     errors.confirm_password}
                 </Grid>
                 <Button
-                  type='submit'
+                  type="submit"
                   fullWidth
-                  variant='contained'
-                  color='primary'
+                  variant="contained"
+                  color="primary"
                   className={classes.submit}
                 >
                   Submit
                 </Button>
                 <Grid item>
-                  <Link href='/' variant='body2'>
-                    {'Do have an account ? Login'}
+                  <Link href="/" variant="body2">
+                    {"Do have an account ? Login"}
                   </Link>
                 </Grid>
               </Grid>
             </form>
           )}
-        </Formik>}
+        </Formik>
       </div>
     </Container>
   );
 };
 
-export default Update;
+export default RegisterPage;

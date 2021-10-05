@@ -11,16 +11,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from '../store/users';
-import { useGetusersQuery } from '../service/api'
+import { setUsers } from '../Store/Users';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { data, error, isLoading } = useGetusersQuery();
   
   const [auth, users] = useSelector((state) => [state.auth.user, state.users.users]);
   const token = localStorage.getItem("token");
-  console.log("data", {data})
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/users", {

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
-import store from "./store";
+import store from "./Store";
 
 ReactDOM.render(
   <React.StrictMode>

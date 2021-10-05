@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles,Card,CardHeader,CardContent,Avatar,Typography } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { userAdd } from '../store/auth/actions'
+import { userAdd } from '../Store/Auth/Actions'
 
 const useStyles = makeStyles((theme) => ({
   root: {

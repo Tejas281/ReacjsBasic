@@ -1,7 +1,5 @@
-import { USER_ADD } from "./actions";
-
+import { USER_ADD } from "./Actions";
 const defaultuserAuth = { user: null };
-
 function authReducer(state = defaultuserAuth, action) {
   console.log({ action });
   switch (action.type) {
@@ -14,5 +12,4 @@ function authReducer(state = defaultuserAuth, action) {
       return state;
   }
 }
-
 export default authReducer;

@@ -1,7 +1,6 @@
 import React from "react";
 import {TextField, IconButton, InputAdornment} from "@material-ui/core";
 import {Visibility, VisibilityOff} from "@material-ui/icons";
-
 const InputPassword = (props) => {
   const [show, setShow] = React.useState(false);
   const handleClickShowPassword = (event) => {
