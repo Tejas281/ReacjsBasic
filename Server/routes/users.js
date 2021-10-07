@@ -125,6 +125,12 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/usersdata', async (req, res) => {
+    let result =  (await User.find()).length;
+    res.json(result);
+  
+});
+
 // router.get('/:id', async (req, res, next) => {
 //   var id = req.params.id;
 //   try {

@@ -5,15 +5,15 @@ export function setUsers(users) {
     users,
   };
 }
-const defaultuserAuth = { users: [] };
-function usersReducer(state = defaultuserAuth, action){
+const defaultuserAuth = { users: null };
+function usersReducer(state = defaultuserAuth, action) {
   console.log({ action });
   switch (action.type) {
     case USERS_SET:
       return {
         ...state,
         users: action.users,
-             };
+      };
     default:
       return state;
   }

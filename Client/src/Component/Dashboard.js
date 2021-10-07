@@ -11,14 +11,19 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from '../Store/Users';
-
+import { setUsers } from "../Store/Users";
+import { userAdd } from "../Store/Auth/Actions";
 const Dashboard = () => {
   const dispatch = useDispatch();
-  
-  const [auth, users] = useSelector((state) => [state.auth.user, state.users.users]);
+
+  const [auth, users] = useSelector((state) => [
+    state?.auth?.user,
+    state?.users?.users || null,
+  ]);
+  console.log(users);
   const token = localStorage.getItem("token");
   useEffect(() => {
+    if(!users){
     axios
       .get("http://localhost:5000/api/users", {
         headers: { Authorization: `${token}` },
@@ -26,10 +31,11 @@ const Dashboard = () => {
       .then((res) => {
         dispatch(setUsers(res.data));
       })
-      .catch((err) => {
-        console.log("user Not Found", err);
-      });
-  }, []); 
+    }
+    else{
+      console.log("data not found")
+    }
+  }, [users]);
   const handleSubmit = (userId) => {
     axios
       .delete(`http://localhost:5000/api/users/delete/${userId}`)
@@ -41,16 +47,15 @@ const Dashboard = () => {
         console.log("user Not Found", err);
       });
   };
-
+ 
   console.log({ auth });
 
   return (
     <>
-      <Navbar />
-      <div>
-        <TableContainer component={Paper}>
+      <div style={{justifyContent: "space-evenly",display: "grid",alignTtems: "center",justifyItems: "center"}}>
+     
+        <TableContainer component={Paper} sx={{ minWidth: 500 }}>
           <Table
-            sx={{ minWidth: 650 }}
             size="small"
             stickyHeader
             aria-label="sticky table"
@@ -74,6 +79,8 @@ const Dashboard = () => {
                 users?.map((user, i) => (
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    height={"10dp"}
+                    Padding={"16dp"}
                     key={i}
                   >
                     <TableCell component="th" scope="row">
@@ -104,7 +111,7 @@ const Dashboard = () => {
                         <Button
                           variant="contained"
                           onClick={() => handleSubmit(user._id)}
-                          disabled={users?.token}
+                          disabled={users.token}
                         >
                           Delete
                         </Button>

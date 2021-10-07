@@ -48,7 +48,7 @@ export default function Profile(props) {
   const user = useSelector(state => state.auth.user);
   const [expanded, setExpanded] = React.useState(false);
   const token = localStorage.getItem('token');
-
+  console.log("sadsadsasdd",user)
   useEffect(() => {
     axios
       .get('http://localhost:5000/api/auth', {

@@ -20,55 +20,69 @@ import { Formik } from "formik";
 import { useParams } from "react-router";
 import React from "react";
 import InputPassword from "../Component/InputPassword";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../Store/Users";
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+const initialState = {
+  email: "",
+  password: "",
+  firstName: "",
+  lastName: "",
+  date: "",
+  gender: "",
+  confirm_password: "",
+  profilefile: "",
+  phone: "",
+};
 
 const Update = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    avatar: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-      width: "100%", // Fix IE 11 issue.
-      marginTop: theme.spacing(3),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-  }));
+  const classes = useStyles();
+  const users = useSelector((state) => state.users.users);
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    date: "",
-    gender: "",
-    confirm_password: "",
-    profilefile: "",
-    phone: "",
-  });
+  const [data, setData] = useState(initialState);
 
   const { _id } = useParams();
+  
   useEffect(() => {
-    console.log(props);
-    axios
+    let user = (users || []).find((user) => user._id === _id);
+    if(!user) {
+      axios
       .get(`http://localhost:5000/api/users/${_id}`)
       .then((res) => {
         setData({ ...res.data, password: res.data.confirm_password });
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log("data is not found", error);
-      });
-  }, []);
-  console.log(data);
+        
+     
+      console.log("User is not found!");
+      setLoading(false);
+    })
+      return;
+    }
+    console.log("USER", {user}); 
+    setData(user);
+    setLoading(false);
+  }, [users]);
+  
   const token = localStorage.getItem("token");
   const handleSubmit = (e) => {
     console.log({ e });
@@ -84,7 +98,7 @@ const Update = (props) => {
         console.log(error);
       });
   };
-  const classes = useStyles();
+  
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -111,6 +125,7 @@ const Update = (props) => {
               ) {
                 errors.email = "Please Enter EmailID Type( xyz@gmail.com))";
               }
+              
               // password
               if (!values.password) {
                 errors.password = "Please Enter password";
