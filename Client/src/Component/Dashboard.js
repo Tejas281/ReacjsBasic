@@ -13,27 +13,42 @@ import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../Store/Users";
 import { userAdd } from "../Store/Auth/Actions";
+import TablePagination from "@mui/material/TablePagination";
+import { countUser } from "../Store/Users/CountUser";
+
 const Dashboard = () => {
   const dispatch = useDispatch();
-
-  const [auth, users] = useSelector((state) => [
+  const [auth, users, UsersValues] = useSelector((state) => [
     state?.auth?.user,
     state?.users?.users || null,
+    state?.count?.UsersValues || null,
   ]);
-  console.log(users);
+  console.log("aurh user", auth);
+  console.log(UsersValues);
   const token = localStorage.getItem("token");
   useEffect(() => {
-    if(!users){
-    axios
-      .get("http://localhost:5000/api/users", {
-        headers: { Authorization: `${token}` },
-      })
-      .then((res) => {
-        dispatch(setUsers(res.data));
-      })
-    }
-    else{
-      console.log("data not found")
+    if (!users) {
+      axios
+        .get("http://localhost:5000/api/users", {
+          headers: { Authorization: `${token}` },
+        })
+        .then((res) => {
+          console.log("user",res.data)
+          dispatch(setUsers(res.data));
+        });
+    } else if (!auth) {
+      axios
+        .get("http://localhost:5000/api/auth", {
+          headers: { Authorization: `${token}` },
+        })
+        .then((res) => {
+          dispatch(userAdd(res.data));
+        });
+        if (!UsersValues) {
+          axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
+            dispatch(countUser(res.data));
+          });
+        }
     }
   }, [users]);
   const handleSubmit = (userId) => {
@@ -47,19 +62,33 @@ const Dashboard = () => {
         console.log("user Not Found", err);
       });
   };
- 
+  
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   console.log({ auth });
 
   return (
     <>
-      <div style={{justifyContent: "space-evenly",display: "grid",alignTtems: "center",justifyItems: "center"}}>
-     
+      <div
+        style={{
+          justifyContent: "space-evenly",
+          display: "grid",
+          alignTtems: "center",
+          justifyItems: "center",
+        }}
+      >
         <TableContainer component={Paper} sx={{ minWidth: 500 }}>
-          <Table
-            size="small"
-            stickyHeader
-            aria-label="sticky table"
-          >
+          <Table size="small" stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
                 <TableCell>First Name</TableCell>
@@ -68,8 +97,6 @@ const Dashboard = () => {
                 <TableCell>Email</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Gender</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Password</TableCell>
                 <TableCell>Update</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
@@ -91,8 +118,7 @@ const Dashboard = () => {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.phone}</TableCell>
                     <TableCell>{user.gender}</TableCell>
-                    <TableCell>{user.date}</TableCell>
-                    <TableCell>{user.password}</TableCell>
+
                     <TableCell>
                       <div>
                         <Link
@@ -121,6 +147,15 @@ const Dashboard = () => {
                 ))}
             </TableBody>
           </Table>
+          {/* <Pagination count={10} color="primary" style={{display:"flex",justifyContent:"flex-end"}} /> */}
+          <TablePagination
+            component="div"
+            count={UsersValues}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </TableContainer>
       </div>
     </>

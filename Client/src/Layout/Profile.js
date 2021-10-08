@@ -50,6 +50,7 @@ export default function Profile(props) {
   const token = localStorage.getItem('token');
   console.log("sadsadsasdd",user)
   useEffect(() => {
+  if(!user){
     axios
       .get('http://localhost:5000/api/auth', {
         headers: { Authorization: `${token}` },
@@ -57,16 +58,16 @@ export default function Profile(props) {
       .then((res) => {
         dispatch(userAdd(res.data));
       })
-      .catch((err) => {
-        console.log('user Not Found', err);
-      });
+    }
+     else{
+        console.log('user Not Found');
+     }
   }, []);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   return (
     <Card className={classes.root}>
-      
         <div>
           <div className={classes.demo}>
             <CardHeader
@@ -79,7 +80,6 @@ export default function Profile(props) {
               }
             />
           </div>
-
           <div className={classes.demos}>
             {user?.firstName} {user?.lastName}
           </div>

@@ -116,9 +116,9 @@ router.post(
 // response.filename
 router.get('/', async (req, res, next) => {
 
-
+ 
   try {
-    const result = await User.find();
+    const result = await User.find()
     res.send(result);
   } catch (error) {
     console.log('data not found', error);
