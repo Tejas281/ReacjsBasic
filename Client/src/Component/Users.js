@@ -16,27 +16,30 @@ import { userAdd } from "../Store/Auth/Actions";
 import TablePagination from "@mui/material/TablePagination";
 import { countUser } from "../Store/Users/CountUser";
 
-const Dashboard = () => {
+const Users = () => {
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  // const [users, setUsers] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const [postsPerPage] = useState(7);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const dispatch = useDispatch();
-  const [auth, users, UsersValues] = useSelector((state) => [
+  const [auth,users,UsersValues] = useSelector((state) => [
     state?.auth?.user,
     state?.users?.users || null,
     state?.count?.UsersValues || null,
   ]);
+
   console.log("aurh user", auth);
   console.log(UsersValues);
   const token = localStorage.getItem("token");
+
   useEffect(() => {
-    if (!users) {
-      axios
-        .get("http://localhost:5000/api/users", {
-          headers: { Authorization: `${token}` },
-        })
-        .then((res) => {
-          console.log("user",res.data)
-          dispatch(setUsers(res.data));
-        });
-    } else if (!auth) {
+    if (!auth) {
       axios
         .get("http://localhost:5000/api/auth", {
           headers: { Authorization: `${token}` },
@@ -44,13 +47,31 @@ const Dashboard = () => {
         .then((res) => {
           dispatch(userAdd(res.data));
         });
-        if (!UsersValues) {
-          axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
-            dispatch(countUser(res.data));
-          });
-        }
+      if (!UsersValues) {
+        axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
+          dispatch(countUser(res.data));
+        });
+      }
     }
-  }, [users]);
+  }, [auth]);
+
+  useEffect(() => {
+    axios
+        .get(
+          `http://localhost:5000/api/users/pages?page=${page}&limit=${rowsPerPage}`,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+        .then((res) => { 
+          setPageInfo(res.data.info);
+          // setUsers(res.data.users);
+          dispatch(setUsers(res.data.users))
+        });
+        
+  }, [page, rowsPerPage]);
+
+
   const handleSubmit = (userId) => {
     axios
       .delete(`http://localhost:5000/api/users/delete/${userId}`)
@@ -62,19 +83,15 @@ const Dashboard = () => {
         console.log("user Not Found", err);
       });
   };
-  
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePage = (_, page) => {
+    setPage(page);
   };
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
   console.log({ auth });
 
   return (
@@ -102,55 +119,54 @@ const Dashboard = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users &&
-                users?.map((user, i) => (
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    height={"10dp"}
-                    Padding={"16dp"}
-                    key={i}
-                  >
-                    <TableCell component="th" scope="row">
-                      {user.firstName}
-                    </TableCell>
-                    <TableCell>{user.profilefile}</TableCell>
-                    <TableCell>{user.lastName}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>{user.gender}</TableCell>
+              {users?.map((user, i) => (
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  height={"10dp"}
+                  Padding={"16dp"}
+                  key={i}
+                >
+                  <TableCell component="th" scope="row">
+                    {user.firstName}
+                  </TableCell>
+                  <TableCell>{user.profilefile}</TableCell>
+                  <TableCell>{user.lastName}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.gender}</TableCell>
 
-                    <TableCell>
-                      <div>
-                        <Link
-                          to={`/update/${user?._id}`}
-                          className="col-sm d-flex btn"
-                          key={i}
-                          underline="hover"
-                        >
-                          {"Update"}
-                        </Link>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {" "}
-                      {auth?._id !== user?._id && (
-                        <Button
-                          variant="contained"
-                          onClick={() => handleSubmit(user._id)}
-                          disabled={users.token}
-                        >
-                          Delete
-                        </Button>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                  <TableCell>
+                    <div>
+                      <Link
+                        to={`/update/${user?._id}`}
+                        className="col-sm d-flex btn"
+                        key={i}
+                        underline="hover"
+                      >
+                        {"Update"}
+                      </Link>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {auth?._id !== user?._id && (
+                      <Button
+                        variant="contained"
+                        onClick={() => handleSubmit(user._id)}
+                        disabled={users.token}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
           {/* <Pagination count={10} color="primary" style={{display:"flex",justifyContent:"flex-end"}} /> */}
           <TablePagination
             component="div"
-            count={UsersValues}
+            count={pageInfo.count}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
@@ -162,4 +178,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Users;
