@@ -19,6 +19,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+router.get('/users',async(req,res)=>{
+  try{
+  const result = await User.find()
+  res.send(result)
+  }
+  catch(err){
+    console.log("data is Not Found",err)
+  }
+})
 // router.get("/pagination", async (req, res) => {
 //   let { page=4, limit=0, size=2, pre=1, next=0, skip } = req.query;
 //   const count = await User.countDocuments();

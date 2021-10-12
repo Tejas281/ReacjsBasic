@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { batch } from "react-redux";
 import { Link } from "react-router-dom";
-import Navbar from "../Layout/Navbar";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -15,6 +15,9 @@ import { setUsers } from "../Store/Users";
 import { userAdd } from "../Store/Auth/Actions";
 import TablePagination from "@mui/material/TablePagination";
 import { countUser } from "../Store/Users/CountUser";
+import { pagination } from "../Store/Users/Pagination";
+
+var DATA = {};
 
 const Users = () => {
   const [loading, setLoading] = useState(false);
@@ -28,10 +31,11 @@ const Users = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const dispatch = useDispatch();
-  const [auth,users,UsersValues] = useSelector((state) => [
+  const [auth, users, UsersValues, paginations] = useSelector((state) => [
     state?.auth?.user,
     state?.users?.users || null,
     state?.count?.UsersValues || null,
+    state?.pagination?.userPages,
   ]);
 
   console.log("aurh user", auth);
@@ -45,7 +49,9 @@ const Users = () => {
           headers: { Authorization: `${token}` },
         })
         .then((res) => {
-          dispatch(userAdd(res.data));
+          batch(() => {
+            dispatch(userAdd(res.data));
+          });
         });
       if (!UsersValues) {
         axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
@@ -56,22 +62,25 @@ const Users = () => {
   }, [auth]);
 
   useEffect(() => {
+    console.log({DATA})
+    if (DATA[page]) {
+      setPageInfo(DATA[page].info);
+      dispatch(setUsers(DATA[page].users));
+      return;
+    }
     axios
-        .get(
-          `http://localhost:5000/api/users/pages?page=${page}&limit=${rowsPerPage}`,
-          {
-            headers: { Authorization: `${token}` },
-          }
-        )
-        .then((res) => { 
-          setPageInfo(res.data.info);
-          // setUsers(res.data.users);
-          dispatch(setUsers(res.data.users))
-        });
-        
+      .get(
+        `http://localhost:5000/api/users/pages?page=${page}&limit=${rowsPerPage}`,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      )
+      .then((res) => {
+        DATA[page] = res.data;
+        setPageInfo(res.data.info);
+        dispatch(setUsers(res.data.users));
+      });
   }, [page, rowsPerPage]);
-
-
   const handleSubmit = (userId) => {
     axios
       .delete(`http://localhost:5000/api/users/delete/${userId}`)
