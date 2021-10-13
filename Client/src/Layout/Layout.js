@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { withStyles,Drawer,AppBar,Toolbar,CssBaseline,Typography,Divider,IconButton,MenuItem,Menu} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Logout from "../Component/Logout";
+import Logout from "../Pages/Logout";
 import Profile from "./Profile";
 import Navbar from "./Navbar";
 const drawerWidth = 220;

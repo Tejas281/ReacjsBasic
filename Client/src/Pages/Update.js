@@ -19,7 +19,7 @@ import axios from "axios";
 import { Formik } from "formik";
 import { useParams } from "react-router";
 import React from "react";
-import InputPassword from "../Component/InputPassword";
+import InputPassword from "./InputPassword";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../Store/Users";
 

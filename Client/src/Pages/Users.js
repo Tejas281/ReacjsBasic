@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { batch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,7 +11,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@material-ui/core/Button";
-import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../Store/Users";
 import { userAdd } from "../Store/Auth/Actions";
 import TablePagination from "@mui/material/TablePagination";
@@ -18,24 +18,16 @@ import { countUser } from "../Store/Users/CountUser";
 import { pagination } from "../Store/Users/Pagination";
 
 var DATA = {};
-
 const Users = () => {
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  // const [users, setUsers] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
-  const [postsPerPage] = useState(7);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   const dispatch = useDispatch();
-  const [auth, users, UsersValues, paginations] = useSelector((state) => [
+  const [auth, users, UsersValues] = useSelector((state) => [
     state?.auth?.user,
     state?.users?.users || null,
     state?.count?.UsersValues || null,
-    state?.pagination?.userPages,
   ]);
 
   console.log("aurh user", auth);
@@ -62,7 +54,7 @@ const Users = () => {
   }, [auth]);
 
   useEffect(() => {
-    console.log({DATA})
+    console.log({ DATA });
     if (DATA[page]) {
       setPageInfo(DATA[page].info);
       dispatch(setUsers(DATA[page].users));
@@ -93,11 +85,11 @@ const Users = () => {
       });
   };
 
-  const handleChangePage = (_, page) => {
+  const handleChangePage = (event, page) => {
     setPage(page);
   };
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   };
 
@@ -172,7 +164,6 @@ const Users = () => {
               ))}
             </TableBody>
           </Table>
-          {/* <Pagination count={10} color="primary" style={{display:"flex",justifyContent:"flex-end"}} /> */}
           <TablePagination
             component="div"
             count={pageInfo.count}

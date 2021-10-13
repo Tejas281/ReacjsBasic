@@ -1,8 +1,8 @@
 import React from "react";
-import RegisterPage from "./Component/RegisterPage";
-import LoginPage from "./Component/LoginPage";
+import RegisterPage from "./Pages/RegisterPage";
+import LoginPage from "./Pages/LoginPage";
 import { BrowserRouter as Router, Switch, Route, Redirect, } from "react-router-dom";
-import Users from "./Component/Users";
+import Users from "./Pages/Users";
 import UpdateUser from "./Pages/Update";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "./Layout/Layout";
