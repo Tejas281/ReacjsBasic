@@ -1,5 +1,7 @@
-import { USER_ADD } from "./Actions";
+import { GET_AUTH_USER, USER_ADD } from "./Actions";
 const defaultuserAuth = { user: null };
+
+
 function authReducer(state = defaultuserAuth, action) {
   console.log({ action });
   switch (action.type) {
@@ -7,7 +9,13 @@ function authReducer(state = defaultuserAuth, action) {
       return {
         ...state,
         user: action.user,
+        loading: false
       };
+      case GET_AUTH_USER :
+        return{
+          ...state,
+          loading : true
+        }
     default:
       return state;
   }

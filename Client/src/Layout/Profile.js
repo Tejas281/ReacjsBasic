@@ -3,7 +3,7 @@ import { makeStyles,Card,CardHeader,CardContent,Avatar,Typography } from '@mater
 import { red } from '@material-ui/core/colors';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { userAdd } from '../Store/Auth/Actions'
+import { getAuthuser} from '../Store/Auth/Actions'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,24 +45,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Profile(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector(state => state?.auth?.user);
+console.log("++++++++++User+++"  , user)
   const [expanded, setExpanded] = React.useState(false);
-  const token = localStorage.getItem('token');
-  console.log("sadsadsasdd",user)
   useEffect(() => {
-  if(!user){
-    axios
-      .get('http://localhost:5000/api/auth', {
-        headers: { Authorization: `${token}` },
-      })
-      .then((res) => {
-        dispatch(userAdd(res.data));
-      })
+    if(!user){
+        dispatch(getAuthuser());
+    }else{
+      console.log("data not found")
     }
-     else{
-        console.log('user Not Found');
-     }
   }, []);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };

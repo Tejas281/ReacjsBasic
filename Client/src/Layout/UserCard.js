@@ -5,23 +5,19 @@ import { CardActionArea } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { countUser } from "../Store/Users/CountUser";
+import {getcount} from "../Store/CoustUser/CounstUserAction";
 
 export const UsersCard = () => {
   const dispatch = useDispatch();
 
-  const Users= useSelector((state) => state.count.UsersValues || null);
-  //const users = useSelector((state) => state?.users?.users?.length || 0);
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    if(!Users){
-    axios
-      .get("http://localhost:5000/api/users/usersdata")
-      .then((res) => {
-        dispatch(countUser(res.data));
-      })
-    }
-  }, []);
+  const Users=useSelector((state) => state?.count?.UsersValues || 0);
+  console.log("+++++++Users+++++" , Users)
+  useEffect(() => { 
+    dispatch(getcount());
+}, []);
+
+
+
   return (
     <div>
       <Card sx={{ maxWidth: 345 }}>

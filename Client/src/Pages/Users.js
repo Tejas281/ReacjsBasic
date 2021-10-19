@@ -14,7 +14,9 @@ import Button from "@material-ui/core/Button";
 import { setUsers } from "../Store/Users";
 import { userAdd } from "../Store/Auth/Actions";
 import TablePagination from "@mui/material/TablePagination";
-import { countUser } from "../Store/Users/CountUser";
+import { countUser } from "../Store/CoustUser/CountUser";
+import PopoverPopupState from "../Component/ProfilePicUsers"
+import HideImageRoundedIcon from '@mui/icons-material/HideImageRounded';
 import { pagination } from "../Store/Users/Pagination";
 
 var DATA = {};
@@ -43,13 +45,14 @@ const Users = () => {
         .then((res) => {
           batch(() => {
             dispatch(userAdd(res.data));
+          
           });
         });
-      if (!UsersValues) {
-        axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
-          dispatch(countUser(res.data));
-        });
-      }
+      // if (!UsersValues) {
+      //   axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
+      //     dispatch(countUser(res.data));
+      //   });
+      // }
     }
   }, [auth]);
 
@@ -130,7 +133,7 @@ const Users = () => {
                   <TableCell component="th" scope="row">
                     {user.firstName}
                   </TableCell>
-                  <TableCell>{user.profilefile}</TableCell>
+                  <TableCell><PopoverPopupState usersProfile={user.profilefile}/></TableCell>
                   <TableCell>{user.lastName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone}</TableCell>

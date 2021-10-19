@@ -1,17 +1,25 @@
 import React from "react";
+
+import createSagaMiddleware from 'redux-saga';
 import ReactDOM from "react-dom";
-import App from "./App";
+import { render } from 'react-dom';
+import { applyMiddleware, createStore } from "@reduxjs/toolkit";
 import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
 import store from "./Store";
+import { SagaMiddleware } from "@redux-saga/core";
+import {logger} from 'redux-logger'
+import rootSaga from "./Store/CoustUser/SagaCountUser";
+import App from './App'
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <SnackbarProvider maxSnack={3}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </SnackbarProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  <SnackbarProvider maxSnack={3}>
+  
+  <Provider store={store}>
+  <App />
+  </Provider>,
+  </SnackbarProvider>,
+  
+document.getElementById('root')
 );

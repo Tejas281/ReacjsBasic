@@ -53,13 +53,6 @@ export default function LoginPage(props) {
       history.push("/dashboard");
     }
   }, []);
-  const setToken = (key, value) => {
-    return Promise.resolve().then(() => {
-      console.log("setting token");
-      localStorage.setItem(key, value);
-      console.log("token set");
-    });
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
     axios

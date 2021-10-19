@@ -1,9 +1,15 @@
 import auth from "./Auth";
+import createSagaMiddleware from 'redux-saga';
 import users from "./Users";
-import count from "./Users/CountUser"
+import count from "./CoustUser/CountUser"
 import  pagination  from "./Users/Pagination";
 import { configureStore } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/query";
+import { logger } from 'redux-logger';
+import allsaga from "./Saga/index";
+
+ const sagaMiddleware = createSagaMiddleware();
+  const middleware = [sagaMiddleware,logger];
+
 
 const store = configureStore({
   reducer: {
@@ -11,10 +17,8 @@ const store = configureStore({
     users,
     count,
     pagination,
-  },
-  middleware: (getMiddleware) => getMiddleware(),
-});
+  },middleware
+  });
+    sagaMiddleware.run(allsaga)
 
-export default store;
-
-setupListeners(store.dispatch);
+ export default store;
