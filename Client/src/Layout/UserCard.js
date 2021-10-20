@@ -12,8 +12,11 @@ export const UsersCard = () => {
 
   const Users=useSelector((state) => state?.count?.UsersValues || 0);
   console.log("+++++++Users+++++" , Users)
-  useEffect(() => { 
-    dispatch(getcount());
+  useEffect(() => {
+    if(!Users)
+    {
+      dispatch(getcount());
+    } 
 }, []);
 
 

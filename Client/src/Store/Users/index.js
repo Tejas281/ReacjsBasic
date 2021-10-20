@@ -1,10 +1,4 @@
-const USERS_SET = "USERS_SET";
-export function setUsers(users) {
-  return {
-    type: USERS_SET,
-    users,
-  };
-}
+import { GET_USER, USERS_SET } from "./UsersAction";
 const defaultuserAuth = { users: null };
 function usersReducer(state = defaultuserAuth, action) {
   console.log({ action });
@@ -13,6 +7,12 @@ function usersReducer(state = defaultuserAuth, action) {
       return {
         ...state,
         users: action.users,
+        loading: false,
+      };
+    case GET_USER:
+      return {
+        ...state,
+        loading: true,
       };
     default:
       return state;

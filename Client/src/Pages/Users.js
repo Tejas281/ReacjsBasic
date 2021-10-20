@@ -11,8 +11,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@material-ui/core/Button";
-import { setUsers } from "../Store/Users";
-import { userAdd } from "../Store/Auth/Actions";
+import { setUsers } from "../Store/Users/UsersAction";
+import { getAuthuser, userAdd } from "../Store/Auth/Actions";
 import TablePagination from "@mui/material/TablePagination";
 import { countUser } from "../Store/CoustUser/CountUser";
 import PopoverPopupState from "../Component/ProfilePicUsers"
@@ -38,21 +38,7 @@ const Users = () => {
 
   useEffect(() => {
     if (!auth) {
-      axios
-        .get("http://localhost:5000/api/auth", {
-          headers: { Authorization: `${token}` },
-        })
-        .then((res) => {
-          batch(() => {
-            dispatch(userAdd(res.data));
-          
-          });
-        });
-      // if (!UsersValues) {
-      //   axios.get("http://localhost:5000/api/users/usersdata").then((res) => {
-      //     dispatch(countUser(res.data));
-      //   });
-      // }
+      dispatch(getAuthuser())
     }
   }, [auth]);
 

@@ -66,6 +66,7 @@ const Update = (props) => {
   
   useEffect(() => {
     let user = (users || []).find((user) => user._id === _id);
+
     if(!user) {
       axios
       .get(`http://localhost:5000/api/users/${_id}`)

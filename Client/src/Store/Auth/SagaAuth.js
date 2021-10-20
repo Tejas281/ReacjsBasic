@@ -1,7 +1,7 @@
 import api from "../../Utils/api";
 import { GET_AUTH_USER, userAdd } from "./Actions";
 import { call, put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
+
 
 function fetchAuthUser(){
 return api.get(`/auth`)
