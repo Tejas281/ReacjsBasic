@@ -1,25 +1,24 @@
-import { all, call,put,takeEvery } from "@redux-saga/core/effects";
-import axios from "axios";
-import { getUser, GET_USER } from "./UsersAction";
+import { call, all, put, takeEvery } from "redux-saga/effects";
+import api from "../../Utils/api";
+import { addUsers, GET_USER } from "./UsersAction";
 
-function fetchUser(){
-    return axios.get(``)
-    .then((res)=>{
 
-    }).
-    catch(()=>{
-
-    })
+function fetchprofile({page, rowsPerPage}) {
+  return api
+    .get(`/users/pages?page=${page}&limit=${rowsPerPage}`)
+    .then(res=>res.data)
+    .catch((error) => {
+      throw error;
+    });
 }
 
-function* fetchAllUsers(){
-    const allUserFound = yield  call(fetchUser);
-    yield put (getUser(allUserFound))
+function* fetchUsers({data}) {
+  const res = yield call(fetchprofile, data);
+  yield put(addUsers({users: res.users, info: res.info}));
 }
 
+function* allusers() {
+  yield takeEvery(GET_USER, fetchUsers);
+}
 
-function* AlluserS() {
-    yield takeEvery(GET_USER, fetchAllUsers);
-  }
-
-  export default AlluserS
+export default allusers;
