@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { batch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@mui/material/Table";
@@ -14,10 +13,9 @@ import Button from "@material-ui/core/Button";
 import { getUser, setUsers } from "../Store/Users/UsersAction";
 import { getAuthuser, userAdd } from "../Store/Auth/Actions";
 import TablePagination from "@mui/material/TablePagination";
-import { countUser } from "../Store/CoustUser/CountUser";
+import AddIcon from '@mui/icons-material/Add';
+
 import PopoverPopupState from "../Component/ProfilePicUsers";
-import HideImageRoundedIcon from "@mui/icons-material/HideImageRounded";
-import { pagination } from "../Store/Users/Pagination";
 
 const getPaginated = (array, { page, limit }) => {
   let start = page * limit;
@@ -27,13 +25,10 @@ const getPaginated = (array, { page, limit }) => {
 var DATA = {};
 
 const Users = () => {
-  // const [pageInfo, setPageInfo] = useState({});
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const dispatch = useDispatch();
   const usercounts = useSelector(state => state?.users?.pageInfo?.count || null);
-  console.log("+++++Usercount ++++++++"  , usercounts);
-
   const [auth, users = {}, pageInfo= {count : usercounts}] = useSelector((state) => [
     state?.auth?.user,
     state?.users?.users || null,
@@ -51,23 +46,6 @@ const Users = () => {
 
   useEffect(() => {
     console.log({ DATA });
-    // if (DATA[page]) {
-    //   setPageInfo(DATA[page].info);
-    //   dispatch(getUser(DATA[page].users));
-    //   return;
-    // }
-    // axios
-    //   .get(
-    //     `http://localhost:5000/api/users/pages?page=${page}&limit=${rowsPerPage}`,
-    //     {
-    //       headers: { Authorization: `${token}` },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     DATA[page] = res.data;
-    //     setPageInfo(res.data.info);
-    //     dispatch(setUsers(res.data.users));
-    //   });
     if (!getPaginated(users || [], { page, limit: rowsPerPage }).length) {
       dispatch(getUser({ page, rowsPerPage }));
     }
@@ -168,15 +146,21 @@ const Users = () => {
                   )
                 )}
             </TableBody>
+            
           </Table>
+         
           <TablePagination
             component="div"
             count={pageInfo.count}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}            
           />
+          
+           <Button style={{display:"inherit",alignItems: "inherit",justifyContent:"inherit",width: "-webkit-fill-available", color: "white",
+    backgroundColor: "white"}}   variant="outlined" ><Link to="/adduser" >ADD USER </Link></Button>
+      
         </TableContainer>
       </div>
     </>

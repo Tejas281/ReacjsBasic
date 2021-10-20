@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "./Layout/Layout";
 import Dashboard from "./Layout/UserCard";
 import { Dashboard as DashboardIcon, Group, Info, Help } from "@material-ui/icons";
-
+import Adduser from "./Pages/Adduser"
 const PrivateRoute = (props) => {
   return localStorage.getItem("token") ? (
     <Route {...props} />
@@ -42,6 +42,7 @@ function MainLayout() {
         <Route path="/users" component={Users} exact />
         <Route path="/update/:_id" component={UpdateUser} exact />
         <Route path="/dashboard" component={Dashboard} exact />
+        <Route path="/adduser" component={Adduser} exact />
       </Switch>
     </Layout>
   );

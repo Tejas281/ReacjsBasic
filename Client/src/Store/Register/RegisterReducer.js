@@ -1,0 +1,3 @@
+
+const defaultuserAuth = { registeruser : null  };
+
