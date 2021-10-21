@@ -22,6 +22,7 @@ import React from "react";
 import InputPassword from "./InputPassword";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../Store/Users";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -61,9 +62,17 @@ const Update = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(initialState);
-
+  const [selectedImage, setSelectedImage] = useState();
   const { _id } = useParams();
+  const history = useHistory()
   
+  // This function will be triggered when the file field change
+  const imageChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
+
   useEffect(() => {
     let user = (users || []).find((user) => user._id === _id);
 
@@ -85,14 +94,21 @@ const Update = (props) => {
   }, [users]);
   
   const token = localStorage.getItem("token");
+  // Update user
   const handleSubmit = (e) => {
     console.log({ e });
+    let formData = new FormData();
+    Object.keys(e).forEach((fieldName) => {
+      console.log(fieldName, e[fieldName]);
+      formData.append(fieldName, e[fieldName]);
+    });
     axios
-      .put(`http://localhost:5000/api/users/${_id}`, { ...e })
+      .put(`http://localhost:5000/api/users/${_id}`, formData)
       .then((res) => {
         setData(res.data);
         console.log("data is", res.data);
         enqueueSnackbar("Update User");
+        history.push('/dashboard')
       })
       .catch((error) => {
         enqueueSnackbar("Some Error");
@@ -103,9 +119,12 @@ const Update = (props) => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+       
+        {selectedImage && (
+         <Avatar src={URL.createObjectURL(selectedImage)}
+         >
         </Avatar>
+        )}
         <Typography component="h1" variant="h5">
           Profile Change
         </Typography>
@@ -189,24 +208,25 @@ const Update = (props) => {
                     {errors.firstName && touched.firstName && errors.firstName}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Button variant="contained" component="label">
-                      Upload File
-                      <input
-                        id="file"
-                        name="profilefile"
-                        values={values.profilefile}
-                        type="file"
-                        hidden
-                        onChange={(event) => {
-                          setFieldValue(
-                            "profilefile",
-                            event.currentTarget.files[0]
-                          );
-                        }}
-                        className="form-control"
-                      />
-                    </Button>
-                  </Grid>
+                  <Button variant="contained" component="label">
+                    Upload File
+                    <input
+                      id="file"
+                      name="profilefile"
+                      values={values.profilefile}
+                      type="file"
+                      hidden
+                      onChange={(event) => {
+                        setFieldValue(
+                          "profilefile",
+                          event.currentTarget.files[0]
+                        );
+                      }}
+                      onChange={imageChange}
+                      className="form-control"
+                    />
+                  </Button>
+                </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       name="lastName"

@@ -9,8 +9,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const authtoken = getAuth();
-  config.headers.Authorization = authtoken || null;
+  const {token} = getAuth();
+  config.headers.Authorization = token || null;
   return config;
 });
 export default api;

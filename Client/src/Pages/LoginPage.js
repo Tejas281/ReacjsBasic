@@ -50,7 +50,7 @@ export default function LoginPage(props) {
   };
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      history.push("/dashboard");
+      history.push("/admin/dashboard");
     }
   }, []);
   const handleSubmit = (e) => {
@@ -58,11 +58,18 @@ export default function LoginPage(props) {
     axios
       .post(api, { ...user })
       .then((res) => {
-        const { token } = res.data;
-        localStorage.setItem("token", token);
-        console.log("redirecting");
+        const { token , role } = res.data;  
+        console.log("Tokennnnnnnnnn " , res.data)
+        localStorage.setItem('token', JSON.stringify({token, role}));
+        if(role === 'admin')
+        {
+         props.history.push('/admin/dashboard'); 
+        }
+        else{
+          props.history.push('/dashboard'); 
+        }
         console.log("token data is", res.data);
-        props.history.push("/dashboard");
+         
       })
       .catch((err) => {
         alert("User Not EmailId-Password Not Correct ", err);

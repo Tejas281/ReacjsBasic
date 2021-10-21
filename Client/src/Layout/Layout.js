@@ -143,7 +143,7 @@ class Layout extends React.Component {
               className={classes.grow}
               noWrap
             >
-              Admin Panel
+             ReactJs Basic
             </Typography>
             <div>
               <IconButton
@@ -179,8 +179,9 @@ class Layout extends React.Component {
                     color="inherit"
                   >
                     <Logout />
-                  </IconButton>
                   <p>Logout</p>
+                  </IconButton>
+                 
                 </MenuItem>
               </Menu>
             </div>

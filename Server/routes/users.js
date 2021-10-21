@@ -234,8 +234,8 @@ router.put("/:_id", async (req, res) => {
   if (gender) contactFields.gender = gender;
   if (password) contactFields.password = password;
   if (confirm_password) contactFields.confirm_password = confirm_password;
-  if (profilefile) contactFields.profilefile = profilefile;
-
+   if (profilefile) contactFields.profilefile = profilefile;
+   
   const _id = req.params._id;
   console.log("id is", req.params);
   try {
@@ -243,6 +243,7 @@ router.put("/:_id", async (req, res) => {
     if (!users) return res.status(404).json({ msg: "user not found" });
     await User.findByIdAndUpdate(_id, { $set: contactFields }, { new: true });
     res.json(users);
+    console.log(users)
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

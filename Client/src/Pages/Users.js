@@ -51,6 +51,7 @@ const Users = () => {
     }
   }, [page, rowsPerPage]);
   const handleSubmit = (userId) => {
+    
     axios
       .delete(`http://localhost:5000/api/users/delete/${userId}`)
       .then((res) => {
@@ -158,8 +159,7 @@ const Users = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}            
           />
           
-           <Button style={{display:"inherit",alignItems: "inherit",justifyContent:"inherit",width: "-webkit-fill-available", color: "white",
-    backgroundColor: "white"}}   variant="outlined" ><Link to="/adduser" >ADD USER </Link></Button>
+          
       
         </TableContainer>
       </div>
