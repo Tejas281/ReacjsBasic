@@ -51,7 +51,7 @@ const Users = () => {
     }
   }, [page, rowsPerPage]);
   const handleSubmit = (userId) => {
-    
+      
     axios
       .delete(`http://localhost:5000/api/users/delete/${userId}`)
       .then((res) => {

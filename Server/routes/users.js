@@ -8,6 +8,7 @@ const config = require("config");
 const { check, validationResult } = require("express-validator/check");
 
 const User = require("../models/User");
+const Product = require("../models/Product");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,7 +18,16 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
+
+const proImg = multer.diskStorage({
+  destination: "./routes/products",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
 const upload = multer({ storage: storage });
+const products = multer({storage:proImg});
 
 router.get('/users',async(req,res)=>{
   try{
@@ -59,7 +69,7 @@ router.get('/users',async(req,res)=>{
 // });
 
 router.use("/uploads", express.static("uploads"));
-
+router.use("/products",express.static("product"))
 router.post(
   "/",
   upload.single("profilefile"),
@@ -264,5 +274,8 @@ router.delete("/delete/:_id", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+
+
 
 module.exports = router;

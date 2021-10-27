@@ -6,7 +6,8 @@ import  pagination  from "./Users/Pagination";
 import { configureStore } from "@reduxjs/toolkit";
 import { logger } from 'redux-logger';
 import allsaga from "./Saga/index";
-
+import ProductReducer from "./Product/ProductReducer";
+import CountProductReducer from "./Product Count /ProductCountReducer";
  const sagaMiddleware = createSagaMiddleware();
   const middleware = [sagaMiddleware,logger];
 
@@ -17,6 +18,8 @@ const store = configureStore({
     users,
     count,
     pagination,
+    ProductReducer,
+    CountProductReducer,
   },middleware
   });
     sagaMiddleware.run(allsaga)

@@ -8,18 +8,16 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {getcount} from "../Store/CoustUser/CounstUserAction";
 import Grid from '@mui/material/Grid';
+import { getProductCount } from "../Store/Product Count /ProductCountAction";
 export const UsersCard = () => {
   const dispatch = useDispatch();
-
-  const Users=useSelector((state) => state?.count?.UsersValues || 0);
-  console.log("+++++++Users+++++" , Users)
+  const Users=useSelector((state) => state?.count?.UsersValues || null);
+ const productList = useSelector((state)=>state?.CountProductReducer?.ProductCount || null)
   useEffect(() => {
-    if(!Users)
-    {
       dispatch(getcount());
-    } 
+      dispatch(getProductCount())
+    
 }, []);
-
 
 
   return (
@@ -57,12 +55,14 @@ export const UsersCard = () => {
           alt="green iguana"
         /> */}
           <CardContent>
+          <Link to="/productList" >
             <Typography gutterBottom variant="h5" component="div">
-              Users
+              Product List
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {Users}
+              {productList}
             </Typography>
+            </Link>
           </CardContent>
         </CardActionArea>
       </Card>

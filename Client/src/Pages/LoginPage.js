@@ -65,8 +65,8 @@ export default function LoginPage(props) {
         {
          props.history.push('/admin/dashboard'); 
         }
-        else{
-          props.history.push('/dashboard'); 
+        else {
+          props.history.push('/user/product'); 
         }
         console.log("token data is", res.data);
          
