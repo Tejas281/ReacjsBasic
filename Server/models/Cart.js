@@ -8,7 +8,8 @@ const ProductSchema = new Schema({
   },
   items: [
     {
-      productId: { type: Schema.Types.ObjectId, unique: true, ref: "productss" }
+      productId: { type: Schema.Types.ObjectId, unique: true, ref: "productss" },
+      quntity: Number
     },
   ],
 }, 
